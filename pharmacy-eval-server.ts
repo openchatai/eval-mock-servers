@@ -1,7 +1,7 @@
-import FastifySwaggerPlugin from '@fastify/swagger';
-import FastifySwaggerUIPlugin from '@fastify/swagger-ui';
-import { Type, type TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
-import Fastify from 'fastify';
+import FastifySwaggerPlugin from "@fastify/swagger";
+import FastifySwaggerUIPlugin from "@fastify/swagger-ui";
+import { Type, type TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import Fastify from "fastify";
 import {
   BrandDetailResponseSchema,
   BrandListResponseSchema,
@@ -83,7 +83,7 @@ import {
   UnsubscribeProductReviewsErrorResponseSchema,
   UnsubscribeProductReviewsRequestSchema,
   UnsubscribeProductReviewsResponseSchema,
-} from './pharmacy-eval-schemas';
+} from "./pharmacy-eval-schemas";
 
 export default async function theOnlinePharmacy() {
   const fastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
@@ -93,32 +93,32 @@ export default async function theOnlinePharmacy() {
   await fastify.register(FastifySwaggerPlugin, {
     exposeHeadRoutes: false,
     openapi: {
-      openapi: '3.1.0',
+      openapi: "3.1.0",
       info: {
-        title: 'TheOnlinePharmacy API',
+        title: "TheOnlinePharmacy API",
         description:
-          'API for TheOnlinePharmacy, providing access to products, categories, brands, orders, and customers',
-        version: '0.1.0',
+          "API for TheOnlinePharmacy, providing access to products, categories, brands, orders, and customers",
+        version: "0.1.0",
       },
       servers: [
         {
           url: `http://localhost:${port}`,
-          description: 'Local development server',
+          description: "Local development server",
         },
       ],
     },
   });
 
   await fastify.register(FastifySwaggerUIPlugin, {
-    routePrefix: '/docs',
+    routePrefix: "/docs",
   });
 
   // Products routes
-  fastify.get('/products', {
+  fastify.get("/products", {
     schema: {
-      summary: 'List products with filters',
+      summary: "List products with filters",
       description:
-        'Retrieves a paginated list of products with optional filtering and search capabilities',
+        "Retrieves a paginated list of products with optional filtering and search capabilities",
       querystring: ProductFilterQuerySchema,
       response: {
         200: ProductListResponseSchema,
@@ -127,14 +127,14 @@ export default async function theOnlinePharmacy() {
     handler: async ({ query }) => ({
       products: [
         {
-          id: '1',
-          name: 'Vitamin C 1000mg',
-          description: 'High dose vitamin C supplement',
+          id: "1",
+          name: "Vitamin C 1000mg",
+          description: "High dose vitamin C supplement",
           price: 12.99,
           stock: 100,
-          category: 'Vitamins',
-          brand: 'HealthPlus',
-          imageUrl: 'https://example.com/vitamin-c.jpg',
+          category: "Vitamins",
+          brand: "HealthPlus",
+          imageUrl: "https://example.com/vitamin-c.jpg",
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -146,21 +146,21 @@ export default async function theOnlinePharmacy() {
   });
 
   fastify.get(
-    '/products/:id',
+    "/products/:id",
     {
       schema: {
-        summary: 'Get product by ID',
-        description: 'Retrieves detailed information about a specific product',
+        summary: "Get product by ID",
+        description: "Retrieves detailed information about a specific product",
         params: Type.Object({
-          id: Type.Integer({ description: 'Product ID to retrieve' }),
+          id: Type.Integer({ description: "Product ID to retrieve" }),
         }),
         response: {
           200: ProductDetailResponseSchema,
           404: Type.Object(
             {
-              message: Type.String({ description: 'Error message' }),
+              message: Type.String({ description: "Error message" }),
             },
-            { description: 'Product not found' },
+            { description: "Product not found" }
           ),
         },
       },
@@ -170,28 +170,28 @@ export default async function theOnlinePharmacy() {
       res.code(200).send({
         product: {
           products_id: params.id,
-          products_name: 'Vitamin C 1000mg',
-          products_description: 'High dose vitamin C supplement',
+          products_name: "Vitamin C 1000mg",
+          products_description: "High dose vitamin C supplement",
           products_price: 12.99,
           stock: 100,
-          artnr_up: '1234567890',
-          ean_code: '1234567890',
-          tht: '2025-01-01',
-          products_inhoud: '100ml',
-          products_url: 'https://example.com/vitamin-c.jpg',
+          artnr_up: "1234567890",
+          ean_code: "1234567890",
+          tht: "2025-01-01",
+          products_inhoud: "100ml",
+          products_url: "https://example.com/vitamin-c.jpg",
           can_be_returned: true,
           is_hygiene_product: false,
-          date_available_again: '2025-01-01',
+          date_available_again: "2025-01-01",
         },
       });
-    },
+    }
   );
 
   // Categories routes
-  fastify.get('/categories', {
+  fastify.get("/categories", {
     schema: {
-      summary: 'Get all product categories',
-      description: 'Retrieves a paginated list of product categories',
+      summary: "Get all product categories",
+      description: "Retrieves a paginated list of product categories",
       querystring: PaginationQuerySchema,
       response: {
         200: CategoryListResponseSchema,
@@ -200,9 +200,9 @@ export default async function theOnlinePharmacy() {
     handler: async ({ query }) => ({
       categories: [
         {
-          id: '1',
-          name: 'Vitamins',
-          description: 'All types of vitamins and supplements',
+          id: "1",
+          name: "Vitamins",
+          description: "All types of vitamins and supplements",
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -213,38 +213,38 @@ export default async function theOnlinePharmacy() {
     }),
   });
 
-  fastify.get('/categories/:id', {
+  fastify.get("/categories/:id", {
     schema: {
-      summary: 'Get category by ID',
+      summary: "Get category by ID",
       description:
-        'Retrieves detailed information about a specific product category',
+        "Retrieves detailed information about a specific product category",
       params: Type.Object({
-        id: Type.String({ description: 'Category ID to retrieve' }),
+        id: Type.String({ description: "Category ID to retrieve" }),
       }),
       response: {
         200: CategoryDetailResponseSchema,
         404: Type.Object(
           {
-            message: Type.String({ description: 'Error message' }),
+            message: Type.String({ description: "Error message" }),
           },
-          { description: 'Category not found' },
+          { description: "Category not found" }
         ),
       },
     },
     handler: async ({ params }) => ({
       id: params.id,
-      name: 'Vitamins',
-      description: 'All types of vitamins and supplements',
+      name: "Vitamins",
+      description: "All types of vitamins and supplements",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }),
   });
 
   // Brands routes
-  fastify.get('/brands', {
+  fastify.get("/brands", {
     schema: {
-      summary: 'Get all brands',
-      description: 'Retrieves a paginated list of product brands',
+      summary: "Get all brands",
+      description: "Retrieves a paginated list of product brands",
       querystring: PaginationQuerySchema,
       response: {
         200: BrandListResponseSchema,
@@ -253,10 +253,10 @@ export default async function theOnlinePharmacy() {
     handler: async ({ query }) => ({
       brands: [
         {
-          id: '1',
-          name: 'HealthPlus',
-          description: 'Premium health supplements',
-          logoUrl: 'https://example.com/healthplus-logo.jpg',
+          id: "1",
+          name: "HealthPlus",
+          description: "Premium health supplements",
+          logoUrl: "https://example.com/healthplus-logo.jpg",
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -267,39 +267,39 @@ export default async function theOnlinePharmacy() {
     }),
   });
 
-  fastify.get('/brands/:id', {
+  fastify.get("/brands/:id", {
     schema: {
-      summary: 'Get brand by ID',
-      description: 'Retrieves detailed information about a specific brand',
+      summary: "Get brand by ID",
+      description: "Retrieves detailed information about a specific brand",
       params: Type.Object({
-        id: Type.String({ description: 'Brand ID to retrieve' }),
+        id: Type.String({ description: "Brand ID to retrieve" }),
       }),
       response: {
         200: BrandDetailResponseSchema,
         404: Type.Object(
           {
-            message: Type.String({ description: 'Error message' }),
+            message: Type.String({ description: "Error message" }),
           },
-          { description: 'Brand not found' },
+          { description: "Brand not found" }
         ),
       },
     },
     handler: async ({ params }) => ({
       id: params.id,
-      name: 'HealthPlus',
-      description: 'Premium health supplements',
-      logoUrl: 'https://example.com/healthplus-logo.jpg',
+      name: "HealthPlus",
+      description: "Premium health supplements",
+      logoUrl: "https://example.com/healthplus-logo.jpg",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }),
   });
 
   // Orders routes
-  fastify.get('/orders', {
+  fastify.get("/orders", {
     schema: {
-      summary: 'Get all orders',
+      summary: "Get all orders",
       description:
-        'Retrieves a paginated list of orders with optional filtering',
+        "Retrieves a paginated list of orders with optional filtering",
       querystring: OrderFilterQuerySchema,
       response: {
         200: OrderListResponseSchema,
@@ -308,22 +308,22 @@ export default async function theOnlinePharmacy() {
     handler: async ({ query }) => ({
       orders: [
         {
-          id: '1',
-          customerId: '1',
-          status: 'pending',
+          id: "1",
+          customerId: "1",
+          status: "pending",
           totalAmount: 25.98,
           items: [
             {
-              productId: '1',
+              productId: "1",
               quantity: 2,
               price: 12.99,
             },
           ],
           shippingAddress: {
-            street: 'Main Street 123',
-            city: 'Amsterdam',
-            postalCode: '1012 AB',
-            country: 'Netherlands',
+            street: "Main Street 123",
+            city: "Amsterdam",
+            postalCode: "1012 AB",
+            country: "Netherlands",
           },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -335,40 +335,40 @@ export default async function theOnlinePharmacy() {
     }),
   });
 
-  fastify.get('/orders/:id', {
+  fastify.get("/orders/:id", {
     schema: {
-      summary: 'Get order by ID',
-      description: 'Retrieves detailed information about a specific order',
+      summary: "Get order by ID",
+      description: "Retrieves detailed information about a specific order",
       params: Type.Object({
-        id: Type.String({ description: 'Order ID to retrieve' }),
+        id: Type.String({ description: "Order ID to retrieve" }),
       }),
       response: {
         200: OrderDetailResponseSchema,
         404: Type.Object(
           {
-            message: Type.String({ description: 'Error message' }),
+            message: Type.String({ description: "Error message" }),
           },
-          { description: 'Order not found' },
+          { description: "Order not found" }
         ),
       },
     },
     handler: async ({ params }) => ({
       id: params.id,
-      customerId: '1',
-      status: 'pending',
+      customerId: "1",
+      status: "pending",
       totalAmount: 25.98,
       items: [
         {
-          productId: '1',
+          productId: "1",
           quantity: 2,
           price: 12.99,
         },
       ],
       shippingAddress: {
-        street: 'Main Street 123',
-        city: 'Amsterdam',
-        postalCode: '1012 AB',
-        country: 'Netherlands',
+        street: "Main Street 123",
+        city: "Amsterdam",
+        postalCode: "1012 AB",
+        country: "Netherlands",
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -376,10 +376,10 @@ export default async function theOnlinePharmacy() {
   });
 
   // Customers routes
-  fastify.get('/customers', {
+  fastify.get("/customers", {
     schema: {
-      summary: 'Get all customers',
-      description: 'Retrieves a paginated list of customers',
+      summary: "Get all customers",
+      description: "Retrieves a paginated list of customers",
       querystring: SearchQuerySchema,
       response: {
         200: CustomerListResponseSchema,
@@ -388,16 +388,16 @@ export default async function theOnlinePharmacy() {
     handler: async ({ query }) => ({
       customers: [
         {
-          id: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          phone: '+31612345678',
+          id: "1",
+          firstName: "John",
+          lastName: "Doe",
+          email: "john.doe@example.com",
+          phone: "+31612345678",
           address: {
-            street: 'Main Street 123',
-            city: 'Amsterdam',
-            postalCode: '1012 AB',
-            country: 'Netherlands',
+            street: "Main Street 123",
+            city: "Amsterdam",
+            postalCode: "1012 AB",
+            country: "Netherlands",
           },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -409,34 +409,34 @@ export default async function theOnlinePharmacy() {
     }),
   });
 
-  fastify.get('/customers/:id', {
+  fastify.get("/customers/:id", {
     schema: {
-      summary: 'Get customer by ID',
-      description: 'Retrieves detailed information about a specific customer',
+      summary: "Get customer by ID",
+      description: "Retrieves detailed information about a specific customer",
       params: Type.Object({
-        id: Type.String({ description: 'Customer ID to retrieve' }),
+        id: Type.String({ description: "Customer ID to retrieve" }),
       }),
       response: {
         200: CustomerDetailResponseSchema,
         404: Type.Object(
           {
-            message: Type.String({ description: 'Error message' }),
+            message: Type.String({ description: "Error message" }),
           },
-          { description: 'Customer not found' },
+          { description: "Customer not found" }
         ),
       },
     },
     handler: async ({ params }) => ({
       id: params.id,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phone: '+31612345678',
+      firstName: "John",
+      lastName: "Doe",
+      email: "john.doe@example.com",
+      phone: "+31612345678",
       address: {
-        street: 'Main Street 123',
-        city: 'Amsterdam',
-        postalCode: '1012 AB',
-        country: 'Netherlands',
+        street: "Main Street 123",
+        city: "Amsterdam",
+        postalCode: "1012 AB",
+        country: "Netherlands",
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -444,9 +444,9 @@ export default async function theOnlinePharmacy() {
   });
 
   // Create order route
-  fastify.post('/create_order', {
+  fastify.post("/create_order", {
     schema: {
-      summary: 'Create a new order',
+      summary: "Create a new order",
       description:
         "Creates a new order for a customer. The customer will receive an email with order details and a payment request. Before calling this endpoint, use the search_product endpoint to get the product ID. Use the customer's email address to create the order. If you don't have the email address, ask the customer for it.",
       body: CreateOrderRequestSchema,
@@ -463,18 +463,18 @@ export default async function theOnlinePharmacy() {
         body.products.length === 0
       ) {
         return {
-          error: 'Missing required fields for order creation',
+          error: "Missing required fields for order creation",
         };
       }
 
       // Dummy implementation - in a real system this would create an actual order
       return {
-        success: 'Order created successfully',
+        success: "Order created successfully",
         orders_id: 12345,
         total:
           body.products.reduce(
             (sum, product) => sum + product.quantity * 12.99,
-            0,
+            0
           ) + 4.95,
         shipping_cost: 4.95,
         payment_request_created: true,
@@ -483,17 +483,17 @@ export default async function theOnlinePharmacy() {
   });
 
   // Search product route
-  fastify.get('/search_product', {
+  fastify.get("/search_product", {
     schema: {
-      summary: 'Look up products',
+      summary: "Look up products",
       description:
         "Find product(s) the user is asking about, as when asking about product availability, expiration, or any other product details. Use this endpoint to get products by name or any keywords if you don't have the ID or EAN code. Returns product IDs that can be used with other actions. You can use the product_details action to get more information about the product. If you get no relevant results, ask the user to provide product ID or EAN code.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
         query: Type.String({
-          description: 'Use product name or any keywords as search query',
+          description: "Use product name or any keywords as search query",
         }),
       }),
       response: {
@@ -502,9 +502,9 @@ export default async function theOnlinePharmacy() {
       },
     },
     handler: async ({ query }) => {
-      if (!query.query || query.query.trim() === '') {
+      if (!query.query || query.query.trim() === "") {
         return {
-          error: 'Search query cannot be empty',
+          error: "Search query cannot be empty",
         };
       }
 
@@ -513,13 +513,13 @@ export default async function theOnlinePharmacy() {
         products: [
           {
             products_id: 1001,
-            products_name: 'Vitamin C 1000mg',
+            products_name: "Vitamin C 1000mg",
             products_description:
-              'High dose vitamin C supplement with rose hip extract',
-            products_inhoud: '100 tablets',
-            products_url: 'https://example.com/products/vitamin-c-1000mg',
-            artnr_up: 'UP12345',
-            ean_code: '8712345678901',
+              "High dose vitamin C supplement with rose hip extract",
+            products_inhoud: "100 tablets",
+            products_url: "https://example.com/products/vitamin-c-1000mg",
+            artnr_up: "UP12345",
+            ean_code: "8712345678901",
             stock: 100,
             products_price: 12.99,
             is_hygiene_product: false,
@@ -527,13 +527,13 @@ export default async function theOnlinePharmacy() {
           },
           {
             products_id: 1002,
-            products_name: 'Vitamin D3 25mcg',
+            products_name: "Vitamin D3 25mcg",
             products_description:
-              'Vitamin D3 supplement for bone health and immune system support',
-            products_inhoud: '90 tablets',
-            products_url: 'https://example.com/products/vitamin-d3-25mcg',
-            artnr_up: 'UP12346',
-            ean_code: '8712345678902',
+              "Vitamin D3 supplement for bone health and immune system support",
+            products_inhoud: "90 tablets",
+            products_url: "https://example.com/products/vitamin-d3-25mcg",
+            artnr_up: "UP12346",
+            ean_code: "8712345678902",
             stock: 50,
             products_price: 9.99,
             is_hygiene_product: false,
@@ -545,31 +545,31 @@ export default async function theOnlinePharmacy() {
   });
 
   // Get product details route
-  fastify.get('/get_product_details', {
+  fastify.get("/get_product_details", {
     schema: {
-      summary: 'Get detailed information about a specific product',
+      summary: "Get detailed information about a specific product",
       description:
-        'Retrieves detailed information about a specific product based on product ID or EAN (European Article Number). Use this to get complete product information when you already know the exact product.',
+        "Retrieves detailed information about a specific product based on product ID or EAN (European Article Number). Use this to get complete product information when you already know the exact product.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
         products_id: Type.Optional(
           Type.String({
-            description: 'Unique identifier for the product',
-          }),
+            description: "Unique identifier for the product",
+          })
         ),
         ean_code: Type.Optional(
           Type.String({
-            description: 'European Article Number for the product',
-          }),
+            description: "European Article Number for the product",
+          })
         ),
       }),
       response: {
         200: ProductDetailResponseSchema,
         400: Type.Object({
           error: Type.String({
-            description: 'Error message',
+            description: "Error message",
           }),
         }),
       },
@@ -577,7 +577,7 @@ export default async function theOnlinePharmacy() {
     handler: async ({ query }) => {
       if (!query.products_id && !query.ean_code) {
         return {
-          error: 'Either products_id or ean_code must be provided',
+          error: "Either products_id or ean_code must be provided",
         };
       }
 
@@ -585,15 +585,15 @@ export default async function theOnlinePharmacy() {
       return {
         product: {
           products_id: 1001,
-          products_name: 'Vitamin C 1000mg',
+          products_name: "Vitamin C 1000mg",
           products_description:
-            'High dose vitamin C supplement with rose hip extract for optimal absorption. Supports the immune system and helps protect cells from oxidative stress.',
-          products_inhoud: '100 tablets',
-          products_url: 'https://example.com/products/vitamin-c-1000mg',
-          artnr_up: 'UP12345',
-          ean_code: '8712345678901',
+            "High dose vitamin C supplement with rose hip extract for optimal absorption. Supports the immune system and helps protect cells from oxidative stress.",
+          products_inhoud: "100 tablets",
+          products_url: "https://example.com/products/vitamin-c-1000mg",
+          artnr_up: "UP12345",
+          ean_code: "8712345678901",
           stock: 100,
-          tht: '2025-12-31',
+          tht: "2025-12-31",
           products_price: 12.99,
           is_hygiene_product: false,
           can_be_returned: true,
@@ -603,14 +603,14 @@ export default async function theOnlinePharmacy() {
   });
 
   // Notify stock route
-  fastify.post('/notify_stock', {
+  fastify.post("/notify_stock", {
     schema: {
-      summary: 'Register for stock notification',
+      summary: "Register for stock notification",
       description:
-        'Register an email address to receive a notification when a product is back in stock. This endpoint is used when a product is currently out of stock and a customer would like to be notified when it becomes available again. Before calling this endpoint, get the product ID using search_product.',
+        "Register an email address to receive a notification when a product is back in stock. This endpoint is used when a product is currently out of stock and a customer would like to be notified when it becomes available again. Before calling this endpoint, get the product ID using search_product.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
       }),
       body: NotifyStockRequestSchema,
@@ -623,14 +623,14 @@ export default async function theOnlinePharmacy() {
       // Check if the product ID exists (in a real implementation, this would query a database)
       if (body.products_id < 1) {
         return {
-          error: 'Invalid product ID',
+          error: "Invalid product ID",
         };
       }
 
       // Check if the email is valid (a more sophisticated validation would be used in production)
-      if (!body.email_address.includes('@')) {
+      if (!body.email_address.includes("@")) {
         return {
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         };
       }
 
@@ -642,14 +642,14 @@ export default async function theOnlinePharmacy() {
   });
 
   // Send return label route
-  fastify.post('/send_return_label', {
+  fastify.post("/send_return_label", {
     schema: {
-      summary: 'Send return label',
+      summary: "Send return label",
       description:
-        'Use this endpoint to send a return label to a customer for a specific order. This can be useful when a customer wants to return an item or the complete order and needs a return label. Especially used by support teams to help customers with returns.',
+        "Use this endpoint to send a return label to a customer for a specific order. This can be useful when a customer wants to return an item or the complete order and needs a return label. Especially used by support teams to help customers with returns.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
       }),
       body: ReturnLabelRequestSchema,
@@ -660,30 +660,30 @@ export default async function theOnlinePharmacy() {
     },
     handler: async ({ body }) => {
       // Check if order exists (in a real implementation, this would query a database)
-      if (body.orders_id !== '1234' && body.orders_id !== '5678') {
+      if (body.orders_id !== "1234" && body.orders_id !== "5678") {
         return {
-          error: 'Order not found',
+          error: "Order not found",
         };
       }
 
       // If using email identification, check if the email is valid
-      if ('email_address' in body && !body.email_address.includes('@')) {
+      if ("email_address" in body && !body.email_address.includes("@")) {
         return {
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         };
       }
 
       // If using address identification, check if the address is valid
-      if ('postcode' in body) {
+      if ("postcode" in body) {
         if (!body.postcode.match(/^[0-9]{4}\s?[A-Z]{2}$/i)) {
           return {
-            error: 'Invalid postal code format',
+            error: "Invalid postal code format",
           };
         }
 
         if (!body.housenumber) {
           return {
-            error: 'House number is required',
+            error: "House number is required",
           };
         }
       }
@@ -693,13 +693,17 @@ export default async function theOnlinePharmacy() {
 
       if (daysSinceShipping > 30) {
         return {
-          error: 'Returns are only possible within 30 days after shipping',
+          error: "Returns are only possible within 30 days after shipping",
         };
       }
 
       // Dummy implementation - in a real system this would generate and send a return label
       return {
-        success: `Return label has been sent${'email_address' in body ? ' to ' + body.email_address : ' to the delivery address'}`,
+        success: `Return label has been sent${
+          "email_address" in body
+            ? " to " + body.email_address
+            : " to the delivery address"
+        }`,
         details: {
           orders_id: body.orders_id,
           days_since_shipping: daysSinceShipping,
@@ -709,14 +713,14 @@ export default async function theOnlinePharmacy() {
   });
 
   // Resend shipping mail route
-  fastify.post('/resend_shipping_mail', {
+  fastify.post("/resend_shipping_mail", {
     schema: {
-      summary: 'Resend shipping confirmation',
+      summary: "Resend shipping confirmation",
       description:
         "Use this endpoint to resend the shipping confirmation to the customer. This can be useful if a customer accidentally deleted the shipping confirmation or never received it. The system looks for the most recent shipping confirmation (template: 'shipping-confirmation-2023') that was sent to this email address.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
       }),
       body: ResendShippingMailRequestSchema,
@@ -727,20 +731,20 @@ export default async function theOnlinePharmacy() {
     },
     handler: async ({ body }) => {
       // Validate email address format
-      if (!body.email_address || !body.email_address.includes('@')) {
+      if (!body.email_address || !body.email_address.includes("@")) {
         return {
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         };
       }
 
       // Check if any orders exist for this email address (in a real implementation, this would query a database)
-      const emailExists = ['customer@example.com', 'test@example.com'].includes(
-        body.email_address,
+      const emailExists = ["customer@example.com", "test@example.com"].includes(
+        body.email_address
       );
 
       if (!emailExists) {
         return {
-          error: 'No shipping confirmations found for this email address',
+          error: "No shipping confirmations found for this email address",
         };
       }
 
@@ -752,14 +756,14 @@ export default async function theOnlinePharmacy() {
   });
 
   // Resend shipping mail to different email route
-  fastify.post('/resend_shipping_mail_to_different_email', {
+  fastify.post("/resend_shipping_mail_to_different_email", {
     schema: {
-      summary: 'Resend shipping confirmation to different email address',
+      summary: "Resend shipping confirmation to different email address",
       description:
-        'Use this endpoint to resend the shipping confirmation to a different email address than the original. This can be useful if a customer wants to receive the shipping confirmation at a different email address. If no orders_id is provided, the most recent shipping confirmation for the given email address will be used. In this case, the new email address must be similar to the original one (e.g. correcting typos like hotmal.com to hotmail.com).',
+        "Use this endpoint to resend the shipping confirmation to a different email address than the original. This can be useful if a customer wants to receive the shipping confirmation at a different email address. If no orders_id is provided, the most recent shipping confirmation for the given email address will be used. In this case, the new email address must be similar to the original one (e.g. correcting typos like hotmal.com to hotmail.com).",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
       }),
       body: ResendShippingMailToDifferentEmailRequestSchema,
@@ -771,36 +775,36 @@ export default async function theOnlinePharmacy() {
     handler: async ({ body }) => {
       // Validate email addresses format
       if (
-        !body.email_address.includes('@') ||
-        !body.new_email_address.includes('@')
+        !body.email_address.includes("@") ||
+        !body.new_email_address.includes("@")
       ) {
         return {
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         };
       }
 
       // Check if the original email address exists (in a real implementation, this would query a database)
-      const emailExists = ['customer@example.com', 'test@example.com'].includes(
-        body.email_address,
+      const emailExists = ["customer@example.com", "test@example.com"].includes(
+        body.email_address
       );
 
       if (!emailExists) {
         return {
           error:
-            'No shipping confirmations found for the original email address',
+            "No shipping confirmations found for the original email address",
         };
       }
 
       // If no order ID was provided, check if the new email is similar to the original one
       if (!body.orders_id) {
         // This is a simple similarity check. In a real implementation, this would be more sophisticated
-        const originalDomain = body.email_address.split('@')[1];
-        const newDomain = body.new_email_address.split('@')[1];
+        const originalDomain = body.email_address.split("@")[1];
+        const newDomain = body.new_email_address.split("@")[1];
 
         if (originalDomain !== newDomain) {
           return {
             error:
-              'The new email address is too different from the original email address. For security reasons, we can only send to similar email addresses (e.g. fixing typos like hotmal.com to hotmail.com)',
+              "The new email address is too different from the original email address. For security reasons, we can only send to similar email addresses (e.g. fixing typos like hotmal.com to hotmail.com)",
           };
         }
       }
@@ -808,34 +812,38 @@ export default async function theOnlinePharmacy() {
       // Check if the order exists (if provided)
       if (
         body.orders_id &&
-        body.orders_id !== '1234' &&
-        body.orders_id !== '5678'
+        body.orders_id !== "1234" &&
+        body.orders_id !== "5678"
       ) {
         return {
-          error: 'Order not found',
+          error: "Order not found",
         };
       }
 
       // Dummy implementation - in a real system this would resend the shipping confirmation email to the new address
       return {
-        success: `Shipping confirmation has been resent from ${body.email_address} to ${body.new_email_address}${body.orders_id ? ` for order #${body.orders_id}` : ''}`,
+        success: `Shipping confirmation has been resent from ${
+          body.email_address
+        } to ${body.new_email_address}${
+          body.orders_id ? ` for order #${body.orders_id}` : ""
+        }`,
       };
     },
   });
 
   // Resend order confirmation route
   fastify.post<{
-    Body: (typeof ResendOrderConfirmationRequestSchema)['static'];
+    Body: (typeof ResendOrderConfirmationRequestSchema)["static"];
   }>(
-    '/resend_order_confirmation',
+    "/resend_order_confirmation",
     {
       schema: {
-        summary: 'Resend order confirmation',
+        summary: "Resend order confirmation",
         description:
-          'Use this endpoint to resend the order confirmation to the customer. This can be useful if a customer accidentally deleted the order confirmation or never received it. The system looks for the most recent order confirmation sent to this email address. This endpoint is not for placing new orders.',
+          "Use this endpoint to resend the order confirmation to the customer. This can be useful if a customer accidentally deleted the order confirmation or never received it. The system looks for the most recent order confirmation sent to this email address. This endpoint is not for placing new orders.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: ResendOrderConfirmationRequestSchema,
@@ -849,20 +857,20 @@ export default async function theOnlinePharmacy() {
       const { body } = req;
 
       // Validate email address format
-      if (!body.email_address || !body.email_address.includes('@')) {
+      if (!body.email_address || !body.email_address.includes("@")) {
         return res.code(400).send({
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         });
       }
 
       // Check if any orders exist for this email address (in a real implementation, this would query a database)
-      const emailExists = ['customer@example.com', 'test@example.com'].includes(
-        body.email_address,
+      const emailExists = ["customer@example.com", "test@example.com"].includes(
+        body.email_address
       );
 
       if (!emailExists) {
         return res.code(400).send({
-          error: 'No order confirmations found for this email address',
+          error: "No order confirmations found for this email address",
         });
       }
 
@@ -870,22 +878,22 @@ export default async function theOnlinePharmacy() {
       return res.code(200).send({
         success: `Order confirmation has been resent to ${body.email_address}`,
       });
-    },
+    }
   );
 
   // Resend order confirmation to different email route
   fastify.post<{
-    Body: (typeof ResendOrderConfirmationToDifferentEmailRequestSchema)['static'];
+    Body: (typeof ResendOrderConfirmationToDifferentEmailRequestSchema)["static"];
   }>(
-    '/resend_order_confirmation_to_different_email',
+    "/resend_order_confirmation_to_different_email",
     {
       schema: {
-        summary: 'Resend order confirmation to different email address',
+        summary: "Resend order confirmation to different email address",
         description:
-          'Use this endpoint to resend the order confirmation to a different email address than the original. This can be useful if a customer wants to receive the order confirmation at a different email address. If no orders_id is provided, the most recent order confirmation for the given email address will be used. In this case, the new email address must be similar to the original one (e.g. correcting typos like hotmal.com to hotmail.com).',
+          "Use this endpoint to resend the order confirmation to a different email address than the original. This can be useful if a customer wants to receive the order confirmation at a different email address. If no orders_id is provided, the most recent order confirmation for the given email address will be used. In this case, the new email address must be similar to the original one (e.g. correcting typos like hotmal.com to hotmail.com).",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: ResendOrderConfirmationToDifferentEmailRequestSchema,
@@ -900,35 +908,35 @@ export default async function theOnlinePharmacy() {
 
       // Validate email addresses format
       if (
-        !body.email_address.includes('@') ||
-        !body.new_email_address.includes('@')
+        !body.email_address.includes("@") ||
+        !body.new_email_address.includes("@")
       ) {
         return res.code(400).send({
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         });
       }
 
       // Check if the original email address exists (in a real implementation, this would query a database)
-      const emailExists = ['customer@example.com', 'test@example.com'].includes(
-        body.email_address,
+      const emailExists = ["customer@example.com", "test@example.com"].includes(
+        body.email_address
       );
 
       if (!emailExists) {
         return res.code(400).send({
-          error: 'No order confirmations found for the original email address',
+          error: "No order confirmations found for the original email address",
         });
       }
 
       // If no order ID was provided, check if the new email is similar to the original one
       if (!body.orders_id) {
         // This is a simple similarity check. In a real implementation, this would be more sophisticated
-        const originalDomain = body.email_address.split('@')[1];
-        const newDomain = body.new_email_address.split('@')[1];
+        const originalDomain = body.email_address.split("@")[1];
+        const newDomain = body.new_email_address.split("@")[1];
 
         if (originalDomain !== newDomain) {
           return res.code(400).send({
             error:
-              'The new email address is too different from the original email address. For security reasons, we can only send to similar email addresses (e.g. fixing typos like hotmal.com to hotmail.com)',
+              "The new email address is too different from the original email address. For security reasons, we can only send to similar email addresses (e.g. fixing typos like hotmal.com to hotmail.com)",
           });
         }
       }
@@ -936,35 +944,39 @@ export default async function theOnlinePharmacy() {
       // Check if the order exists (if provided)
       if (
         body.orders_id &&
-        body.orders_id !== '1234' &&
-        body.orders_id !== '5678'
+        body.orders_id !== "1234" &&
+        body.orders_id !== "5678"
       ) {
         return res.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // Dummy implementation - in a real system this would resend the order confirmation email to the new address
       return res.code(200).send({
-        success: `Order confirmation has been resent from ${body.email_address} to ${body.new_email_address}${body.orders_id ? ` for order #${body.orders_id}` : ''}`,
+        success: `Order confirmation has been resent from ${
+          body.email_address
+        } to ${body.new_email_address}${
+          body.orders_id ? ` for order #${body.orders_id}` : ""
+        }`,
       });
-    },
+    }
   );
 
   // Resend complete order route
   fastify.post<{
-    Body: (typeof ResendCompleteOrderRequestSchema)['static'];
+    Body: (typeof ResendCompleteOrderRequestSchema)["static"];
     Querystring: { ticket_number: string };
   }>(
-    '/resend_complete_order',
+    "/resend_complete_order",
     {
       schema: {
-        summary: 'Resend complete order',
+        summary: "Resend complete order",
         description:
-          'This endpoint creates a new order that is a complete copy of an existing order. This is typically used when a package is lost or damaged in transit, or when a customer claims they never received their order despite the tracking information showing it was delivered.',
+          "This endpoint creates a new order that is a complete copy of an existing order. This is typically used when a package is lost or damaged in transit, or when a customer claims they never received their order despite the tracking information showing it was delivered.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: ResendCompleteOrderRequestSchema,
@@ -978,61 +990,61 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the order exists
-      if (body.orders_id !== '1234' && body.orders_id !== '5678') {
+      if (body.orders_id !== "1234" && body.orders_id !== "5678") {
         return reply.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // If using email identification, check if the email is valid
-      if ('email_address' in body) {
-        if (!body.email_address.includes('@')) {
+      if ("email_address" in body) {
+        if (!body.email_address.includes("@")) {
           return reply.code(400).send({
-            error: 'Invalid email address format',
+            error: "Invalid email address format",
           });
         }
 
         // Check if the email matches the order (in a real system, this would be verified in the database)
         const validEmailForOrder = [
-          'customer@example.com',
-          'test@example.com',
+          "customer@example.com",
+          "test@example.com",
         ].includes(body.email_address);
 
         if (!validEmailForOrder) {
           return reply.code(400).send({
-            error: 'Email address does not match the order',
+            error: "Email address does not match the order",
           });
         }
       }
 
       // If using address identification, validate the address
-      if ('postcode' in body) {
+      if ("postcode" in body) {
         if (!body.postcode.match(/^[0-9]{4}\s?[A-Z]{2}$/i)) {
           return reply.code(400).send({
-            error: 'Invalid postal code format',
+            error: "Invalid postal code format",
           });
         }
 
         // Check if the address matches the order (in a real system, this would be verified in the database)
-        if (body.postcode !== '1234AB' || body.housenumber !== '123') {
+        if (body.postcode !== "1234AB" || body.housenumber !== "123") {
           return reply.code(400).send({
-            error: 'Address does not match the order',
+            error: "Address does not match the order",
           });
         }
       }
 
       // Check if the order is too old to be resent (in a real system, this would use actual dates)
-      const orderDate = new Date('2023-01-15'); // Example date
+      const orderDate = new Date("2023-01-15"); // Example date
       const currentDate = new Date();
       const daysDifference = Math.floor(
-        (currentDate.getTime() - orderDate.getTime()) / (1000 * 60 * 60 * 24),
+        (currentDate.getTime() - orderDate.getTime()) / (1000 * 60 * 60 * 24)
       );
 
       if (daysDifference > 180) {
         // 6 months
         return reply.code(400).send({
           error:
-            'This order is too old to be resent. We can only resend orders that are less than 6 months old.',
+            "This order is too old to be resent. We can only resend orders that are less than 6 months old.",
         });
       }
 
@@ -1043,23 +1055,23 @@ export default async function theOnlinePharmacy() {
         resend_order_id: 98765,
         products_count: 3, // Mock value - in a real implementation, this would be the actual count
       });
-    },
+    }
   );
 
   // Contact product management route
   fastify.post<{
-    Body: (typeof ContactProductManagementRequestSchema)['static'];
+    Body: (typeof ContactProductManagementRequestSchema)["static"];
     Querystring: { ticket_number: string };
   }>(
-    '/contact_productmanagement',
+    "/contact_productmanagement",
     {
       schema: {
-        summary: 'Contact product management',
+        summary: "Contact product management",
         description:
-          'Use this endpoint to contact the product management department about product data issues. This could include incorrect product information, missing details, issues with product categorization, etc. Note that this is not for inventory or stock issues; for those, use /contact_supplier.',
+          "Use this endpoint to contact the product management department about product data issues. This could include incorrect product information, missing details, issues with product categorization, etc. Note that this is not for inventory or stock issues; for those, use /contact_supplier.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: ContactProductManagementRequestSchema,
@@ -1073,10 +1085,10 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the request is defined
-      if (!body.request || body.request.trim() === '') {
+      if (!body.request || body.request.trim() === "") {
         return reply.code(400).send({
           error:
-            'No request defined. Please provide a detailed description of the product data issue.',
+            "No request defined. Please provide a detailed description of the product data issue.",
         });
       }
 
@@ -1084,46 +1096,46 @@ export default async function theOnlinePharmacy() {
       if (body.request.length < 10) {
         return reply.code(400).send({
           error:
-            'Request is too short. Please provide more details about the product data issue.',
+            "Request is too short. Please provide more details about the product data issue.",
         });
       }
 
       // Check if the request contains product information
       const containsProductInfo =
-        body.request.includes('product') ||
-        body.request.includes('EAN') ||
-        body.request.includes('SKU') ||
-        body.request.includes('ID');
+        body.request.includes("product") ||
+        body.request.includes("EAN") ||
+        body.request.includes("SKU") ||
+        body.request.includes("ID");
 
       if (!containsProductInfo) {
         return reply.code(400).send({
           error:
-            'Please include specific product information in your request (product name, ID, EAN, or SKU).',
+            "Please include specific product information in your request (product name, ID, EAN, or SKU).",
         });
       }
 
       // Dummy implementation - in a real system this would create a ticket for the product management department
       return reply.code(200).send({
         success:
-          'Request sent to the product management department. If a response is needed, we will respond within 3 business days',
+          "Request sent to the product management department. If a response is needed, we will respond within 3 business days",
       });
-    },
+    }
   );
 
   // Resend part of order route
   fastify.post<{
-    Body: (typeof ResendPartOfOrderRequestSchema)['static'];
+    Body: (typeof ResendPartOfOrderRequestSchema)["static"];
     Querystring: { ticket_number: string };
   }>(
-    '/resend_part_of_order',
+    "/resend_part_of_order",
     {
       schema: {
-        summary: 'Resend part of an order',
+        summary: "Resend part of an order",
         description:
-          'Use this endpoint to resend part of an order to the customer. This can be useful if part of an order was damaged or not received. The resend is created as a new order without charges. Only products from the original order can be resent, and quantities cannot be higher than the original order.',
+          "Use this endpoint to resend part of an order to the customer. This can be useful if part of an order was damaged or not received. The resend is created as a new order without charges. Only products from the original order can be resent, and quantities cannot be higher than the original order.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: ResendPartOfOrderRequestSchema,
@@ -1137,45 +1149,45 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the order exists
-      if (body.orders_id !== '1234' && body.orders_id !== '5678') {
+      if (body.orders_id !== "1234" && body.orders_id !== "5678") {
         return reply.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // If using email identification, check if the email is valid
-      if ('email_address' in body) {
-        if (!body.email_address.includes('@')) {
+      if ("email_address" in body) {
+        if (!body.email_address.includes("@")) {
           return reply.code(400).send({
-            error: 'Invalid email address format',
+            error: "Invalid email address format",
           });
         }
 
         // Check if the email matches the order (in a real system, this would be verified in the database)
         const validEmailForOrder = [
-          'customer@example.com',
-          'test@example.com',
+          "customer@example.com",
+          "test@example.com",
         ].includes(body.email_address);
 
         if (!validEmailForOrder) {
           return reply.code(400).send({
-            error: 'Email address does not match the order',
+            error: "Email address does not match the order",
           });
         }
       }
 
       // If using address identification, validate the address
-      if ('postcode' in body) {
+      if ("postcode" in body) {
         if (!body.postcode.match(/^[0-9]{4}\s?[A-Z]{2}$/i)) {
           return reply.code(400).send({
-            error: 'Invalid postal code format',
+            error: "Invalid postal code format",
           });
         }
 
         // Check if the address matches the order (in a real system, this would be verified in the database)
-        if (body.postcode !== '1234AB' || body.housenumber !== '123') {
+        if (body.postcode !== "1234AB" || body.housenumber !== "123") {
           return reply.code(400).send({
-            error: 'Address does not match the order',
+            error: "Address does not match the order",
           });
         }
       }
@@ -1183,17 +1195,17 @@ export default async function theOnlinePharmacy() {
       // Check if the products array is valid
       if (!body.products || body.products.length === 0) {
         return reply.code(400).send({
-          error: 'No products specified for resend',
+          error: "No products specified for resend",
         });
       }
 
       // In a real implementation, we would check if each product was part of the original order
       // and if the requested quantity is less than or equal to the original quantity
-      const originalOrderProducts = ['1001', '1002', '1003']; // Example original order products
+      const originalOrderProducts = ["1001", "1002", "1003"]; // Example original order products
       const originalOrderQuantities: Record<string, number> = {
-        '1001': 2,
-        '1002': 1,
-        '1003': 3,
+        "1001": 2,
+        "1002": 1,
+        "1003": 3,
       }; // Example original order quantities
 
       for (const product of body.products) {
@@ -1217,23 +1229,23 @@ export default async function theOnlinePharmacy() {
         resend_order_id: 87655,
         products_count: body.products.length,
       });
-    },
+    }
   );
 
   // Cancel order route
   fastify.post<{
-    Body: (typeof CancelOrderRequestSchema)['static'];
+    Body: (typeof CancelOrderRequestSchema)["static"];
     Querystring: { ticket_number: string };
   }>(
-    '/cancel_order',
+    "/cancel_order",
     {
       schema: {
-        summary: 'Cancel order',
+        summary: "Cancel order",
         description:
-          'This endpoint cancels an order that is still pending or has not been shipped yet. Use this when a customer decides to cancel their order and no shipping confirmation has been sent. The response depends on the current order status and payment method.',
+          "This endpoint cancels an order that is still pending or has not been shipped yet. Use this when a customer decides to cancel their order and no shipping confirmation has been sent. The response depends on the current order status and payment method.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: CancelOrderRequestSchema,
@@ -1247,75 +1259,75 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the order exists
-      if (body.orders_id !== '1234' && body.orders_id !== '5678') {
+      if (body.orders_id !== "1234" && body.orders_id !== "5678") {
         return reply.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // If using email identification, check if the email is valid
-      if ('email_address' in body) {
-        if (!body.email_address.includes('@')) {
+      if ("email_address" in body) {
+        if (!body.email_address.includes("@")) {
           return reply.code(400).send({
-            error: 'Invalid email address format',
+            error: "Invalid email address format",
           });
         }
 
         // Check if the email matches the order (in a real system, this would be verified in the database)
         const validEmailForOrder = [
-          'customer@example.com',
-          'test@example.com',
+          "customer@example.com",
+          "test@example.com",
         ].includes(body.email_address);
 
         if (!validEmailForOrder) {
           return reply.code(400).send({
-            error: 'Email address does not match the order',
+            error: "Email address does not match the order",
           });
         }
       }
 
       // If using address identification, validate the address
-      if ('postcode' in body) {
+      if ("postcode" in body) {
         if (!body.postcode.match(/^[0-9]{4}\s?[A-Z]{2}$/i)) {
           return reply.code(400).send({
-            error: 'Invalid postal code format',
+            error: "Invalid postal code format",
           });
         }
 
         // Check if the address matches the order (in a real system, this would be verified in the database)
-        if (body.postcode !== '1234AB' || body.housenumber !== '123') {
+        if (body.postcode !== "1234AB" || body.housenumber !== "123") {
           return reply.code(400).send({
-            error: 'Address does not match the order',
+            error: "Address does not match the order",
           });
         }
       }
 
       // In a real implementation, we would check if the order is in a state that can be canceled
       // For example, if the order is already shipped, it cannot be canceled
-      const orderCancelStatus = 'pending'; // Example order status (in a real system, this would be retrieved from a database)
+      const orderCancelStatus = "pending"; // Example order status (in a real system, this would be retrieved from a database)
 
       // Dummy implementation - in a real system this would cancel the order
       return reply.code(200).send({
-        success: 'We have canceled your order',
+        success: "We have canceled your order",
         reason: body.cancel_reason || null,
       });
-    },
+    }
   );
 
   // Refund order route
   fastify.post<{
-    Body: (typeof RefundOrderRequestSchema)['static'];
+    Body: (typeof RefundOrderRequestSchema)["static"];
     Querystring: { ticket_number: string };
   }>(
-    '/refund_order',
+    "/refund_order",
     {
       schema: {
-        summary: 'Refund order',
+        summary: "Refund order",
         description:
-          'This endpoint creates a full refund request for a specific order. A new refund order is created with negative amounts. The order must be in a refundable state (e.g. shipped) to process the refund. The refund is processed and the customer is notified.',
+          "This endpoint creates a full refund request for a specific order. A new refund order is created with negative amounts. The order must be in a refundable state (e.g. shipped) to process the refund. The refund is processed and the customer is notified.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: RefundOrderRequestSchema,
@@ -1329,81 +1341,81 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the order exists
-      if (body.orders_id !== '1234' && body.orders_id !== '5678') {
+      if (body.orders_id !== "1234" && body.orders_id !== "5678") {
         return reply.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // If using email identification, check if the email is valid
-      if ('email_address' in body) {
-        if (!body.email_address.includes('@')) {
+      if ("email_address" in body) {
+        if (!body.email_address.includes("@")) {
           return reply.code(400).send({
-            error: 'Invalid email address format',
+            error: "Invalid email address format",
           });
         }
 
         // Check if the email matches the order (in a real system, this would be verified in the database)
         const validEmailForOrder = [
-          'customer@example.com',
-          'test@example.com',
+          "customer@example.com",
+          "test@example.com",
         ].includes(body.email_address);
 
         if (!validEmailForOrder) {
           return reply.code(400).send({
-            error: 'Email address does not match the order',
+            error: "Email address does not match the order",
           });
         }
       }
 
       // If using address identification, validate the address
-      if ('postcode' in body) {
+      if ("postcode" in body) {
         if (!body.postcode.match(/^[0-9]{4}\s?[A-Z]{2}$/i)) {
           return reply.code(400).send({
-            error: 'Invalid postal code format',
+            error: "Invalid postal code format",
           });
         }
 
         // Check if the address matches the order (in a real system, this would be verified in the database)
-        if (body.postcode !== '1234AB' || body.housenumber !== '123') {
+        if (body.postcode !== "1234AB" || body.housenumber !== "123") {
           return reply.code(400).send({
-            error: 'Address does not match the order',
+            error: "Address does not match the order",
           });
         }
       }
 
       // In a real implementation, we would check if the order is in a state that can be refunded
       // For example, if the order is canceled, it cannot be refunded
-      const orderRefundStatus = 'shipped'; // Example order status (in a real system, this would be retrieved from a database)
+      const orderRefundStatus = "shipped"; // Example order status (in a real system, this would be retrieved from a database)
 
       // Dummy implementation - in a real system this would create a refund for the order
       return reply.code(200).send({
         success: `Created full refund for order ${body.orders_id}`,
         refund_order_id: 98765,
       });
-    },
+    }
   );
 
   // Resend invoice schemas
   const ResendInvoiceByEmailSchema = Type.Object({
     orders_id: Type.String({
-      description: 'Unique identifier for the order',
+      description: "Unique identifier for the order",
     }),
     email_address: Type.String({
-      description: 'Email address of the customer',
-      format: 'email',
+      description: "Email address of the customer",
+      format: "email",
     }),
   });
 
   const ResendInvoiceByAddressSchema = Type.Object({
     orders_id: Type.String({
-      description: 'Unique identifier for the order',
+      description: "Unique identifier for the order",
     }),
     postcode: Type.String({
-      description: 'Postal code of the delivery address',
+      description: "Postal code of the delivery address",
     }),
     housenumber: Type.String({
-      description: 'House number of the delivery address',
+      description: "House number of the delivery address",
     }),
   });
 
@@ -1414,33 +1426,33 @@ export default async function theOnlinePharmacy() {
 
   const ResendInvoiceResponseSchema = Type.Object({
     success: Type.String({
-      description: 'Success message',
-      examples: ['Invoice has been resent successfully'],
+      description: "Success message",
+      examples: ["Invoice has been resent successfully"],
     }),
   });
 
   const ResendInvoiceErrorResponseSchema = Type.Object({
     error: Type.String({
-      description: 'Error message',
+      description: "Error message",
       examples: [
-        'To identify an order, we need orders_id and email_address OR orders_id, postcode and house number',
+        "To identify an order, we need orders_id and email_address OR orders_id, postcode and house number",
       ],
     }),
   });
 
   // Resend invoice route
   fastify.post<{
-    Body: (typeof ResendInvoiceRequestSchema)['static'];
+    Body: (typeof ResendInvoiceRequestSchema)["static"];
   }>(
-    '/resend_invoice',
+    "/resend_invoice",
     {
       schema: {
-        summary: 'Resend invoice by email',
+        summary: "Resend invoice by email",
         description:
           "This endpoint allows an invoice to be resent to the customer's email address. To identify an order, one of these combinations is required: orders_id and email_address, or orders_id, postcode and house number",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: ResendInvoiceRequestSchema,
@@ -1454,45 +1466,45 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the order exists
-      if (body.orders_id !== '1234' && body.orders_id !== '5678') {
+      if (body.orders_id !== "1234" && body.orders_id !== "5678") {
         return reply.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // If using email identification, check if the email is valid
-      if ('email_address' in body) {
-        if (!body.email_address.includes('@')) {
+      if ("email_address" in body) {
+        if (!body.email_address.includes("@")) {
           return reply.code(400).send({
-            error: 'Invalid email address format',
+            error: "Invalid email address format",
           });
         }
 
         // Check if the email matches the order (in a real system, this would be verified in the database)
         const validEmailForOrder = [
-          'customer@example.com',
-          'test@example.com',
+          "customer@example.com",
+          "test@example.com",
         ].includes(body.email_address);
 
         if (!validEmailForOrder) {
           return reply.code(400).send({
-            error: 'Email address does not match the order',
+            error: "Email address does not match the order",
           });
         }
       }
 
       // If using address identification, validate the address
-      if ('postcode' in body) {
+      if ("postcode" in body) {
         if (!body.postcode.match(/^[0-9]{4}\s?[A-Z]{2}$/i)) {
           return reply.code(400).send({
-            error: 'Invalid postal code format',
+            error: "Invalid postal code format",
           });
         }
 
         // Check if the address matches the order (in a real system, this would be verified in the database)
-        if (body.postcode !== '1234AB' || body.housenumber !== '123') {
+        if (body.postcode !== "1234AB" || body.housenumber !== "123") {
           return reply.code(400).send({
-            error: 'Address does not match the order',
+            error: "Address does not match the order",
           });
         }
       }
@@ -1501,59 +1513,59 @@ export default async function theOnlinePharmacy() {
       return reply.code(200).send({
         success: `Invoice for order ${body.orders_id} has been resent to the customer's email address`,
       });
-    },
+    }
   );
 
   // Update delivery address schemas
   const UpdateDeliveryAddressRequestSchema = Type.Object({
     orders_id: Type.String({
-      description: 'Unique identifier for the order to update the address',
+      description: "Unique identifier for the order to update the address",
     }),
     email_address: Type.String({
-      description: 'Email address of the customer associated with the order',
-      format: 'email',
+      description: "Email address of the customer associated with the order",
+      format: "email",
     }),
     street_address: Type.String({
       description:
-        'Full street address including house number and any additions',
-      examples: ['Example Street 123A'],
+        "Full street address including house number and any additions",
+      examples: ["Example Street 123A"],
     }),
     city: Type.String({
-      description: 'City name',
+      description: "City name",
     }),
     postcode: Type.String({
-      description: 'Postal code (spaces will be removed)',
-      examples: ['1234 AB'],
+      description: "Postal code (spaces will be removed)",
+      examples: ["1234 AB"],
     }),
     country: Type.Optional(
       Type.String({
         description: "Country name, defaults to 'Netherlands' if not provided",
-        default: 'Netherlands',
-      }),
+        default: "Netherlands",
+      })
     ),
   });
 
   const UpdateDeliveryAddressResponseSchema = Type.Object({
     success: Type.String({
-      description: 'Success message',
-      examples: ['Delivery address updated successfully'],
+      description: "Success message",
+      examples: ["Delivery address updated successfully"],
     }),
     details: Type.Object({
       orders_id: Type.String({
-        description: 'ID of the order whose address was updated',
+        description: "ID of the order whose address was updated",
       }),
       new_address: Type.Object({
         street: Type.String({
-          description: 'New street name and house number',
+          description: "New street name and house number",
         }),
         city: Type.String({
-          description: 'New city name',
+          description: "New city name",
         }),
         postcode: Type.String({
-          description: 'New postal code',
+          description: "New postal code",
         }),
         country: Type.String({
-          description: 'New country',
+          description: "New country",
         }),
       }),
     }),
@@ -1561,26 +1573,26 @@ export default async function theOnlinePharmacy() {
 
   const UpdateDeliveryAddressErrorResponseSchema = Type.Object({
     error: Type.String({
-      description: 'Error message',
+      description: "Error message",
       examples: [
-        'The delivery address cannot be updated because the order has already been sent to the warehouse',
+        "The delivery address cannot be updated because the order has already been sent to the warehouse",
       ],
     }),
   });
 
   // Update delivery address route
   fastify.post<{
-    Body: (typeof UpdateDeliveryAddressRequestSchema)['static'];
+    Body: (typeof UpdateDeliveryAddressRequestSchema)["static"];
   }>(
-    '/update_delivery_address',
+    "/update_delivery_address",
     {
       schema: {
-        summary: 'Update delivery address of an existing order',
+        summary: "Update delivery address of an existing order",
         description:
-          'Use this endpoint to update the delivery address of an existing order. This only works if the order has not yet been sent to the warehouse. The system will automatically extract the street name, house number, and house number addition from the provided address. If no country is provided, Netherlands is assumed as the default country. Do not use this function for new orders.',
+          "Use this endpoint to update the delivery address of an existing order. This only works if the order has not yet been sent to the warehouse. The system will automatically extract the street name, house number, and house number addition from the provided address. If no country is provided, Netherlands is assumed as the default country. Do not use this function for new orders.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: UpdateDeliveryAddressRequestSchema,
@@ -1594,51 +1606,51 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the order exists and if it belongs to the provided email
-      const validOrder = body.orders_id === '1234' || body.orders_id === '5678';
-      const validEmail = ['customer@example.com', 'test@example.com'].includes(
-        body.email_address,
+      const validOrder = body.orders_id === "1234" || body.orders_id === "5678";
+      const validEmail = ["customer@example.com", "test@example.com"].includes(
+        body.email_address
       );
 
       if (!validOrder || !validEmail) {
         return reply.code(400).send({
-          error: 'Order not found or email does not match the order',
+          error: "Order not found or email does not match the order",
         });
       }
 
       // Validate email address format
-      if (!body.email_address.includes('@')) {
+      if (!body.email_address.includes("@")) {
         return reply.code(400).send({
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         });
       }
 
       // Validate postal code format
       if (!body.postcode.match(/^[0-9]{4}\s?[A-Z]{2}$/i)) {
         return reply.code(400).send({
-          error: 'Invalid postal code format',
+          error: "Invalid postal code format",
         });
       }
 
       // In a real implementation, we would check if the order is still in a state that allows address updates
-      const orderStatus: string = 'pending';
+      const orderStatus: string = "pending";
 
-      if (orderStatus !== 'pending') {
+      if (orderStatus !== "pending") {
         return reply.code(400).send({
           error:
-            'The delivery address cannot be updated because the order has already been sent to the warehouse',
+            "The delivery address cannot be updated because the order has already been sent to the warehouse",
         });
       }
 
       // Extract street name and house number from street_address (in a real implementation, this would be more sophisticated)
-      const streetParts = body.street_address.split(' ');
-      const houseNumber = streetParts.pop() || '';
-      const street = streetParts.join(' ');
+      const streetParts = body.street_address.split(" ");
+      const houseNumber = streetParts.pop() || "";
+      const street = streetParts.join(" ");
 
       // Normalize postcode by removing spaces
-      const normalizedPostcode = body.postcode.replace(/\s+/g, '');
+      const normalizedPostcode = body.postcode.replace(/\s+/g, "");
 
       // Use Netherlands as default country if not provided
-      const country = body.country || 'Netherlands';
+      const country = body.country || "Netherlands";
 
       // Dummy implementation - in a real system this would update the address in the database
       return reply.code(200).send({
@@ -1653,45 +1665,45 @@ export default async function theOnlinePharmacy() {
           },
         },
       });
-    },
+    }
   );
 
   // Reset password schemas
   const ResetPasswordRequestSchema = Type.Object({
     email_address: Type.String({
       description:
-        'Email address linked to the customer account that needs a password reset',
-      format: 'email',
+        "Email address linked to the customer account that needs a password reset",
+      format: "email",
     }),
   });
 
   const ResetPasswordResponseSchema = Type.Object({
     success: Type.String({
-      description: 'Success message',
-      examples: ['Password reset email sent'],
+      description: "Success message",
+      examples: ["Password reset email sent"],
     }),
   });
 
   const ResetPasswordErrorResponseSchema = Type.Object({
     error: Type.String({
-      description: 'Error message',
-      examples: ['No email address provided'],
+      description: "Error message",
+      examples: ["No email address provided"],
     }),
   });
 
   // Reset password route
   fastify.post<{
-    Body: (typeof ResetPasswordRequestSchema)['static'];
+    Body: (typeof ResetPasswordRequestSchema)["static"];
   }>(
-    '/reset_password',
+    "/reset_password",
     {
       schema: {
-        summary: 'Reset password',
+        summary: "Reset password",
         description:
-          'Use this endpoint to reset the password for a customer account.\nThis will send an email to the customer with their new password.',
+          "Use this endpoint to reset the password for a customer account.\nThis will send an email to the customer with their new password.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: ResetPasswordRequestSchema,
@@ -1705,15 +1717,15 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Validate email address format
-      if (!body.email_address || !body.email_address.includes('@')) {
+      if (!body.email_address || !body.email_address.includes("@")) {
         return reply.code(400).send({
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         });
       }
 
       // Check if the email address exists in the system (in a real implementation, this would query a database)
-      const emailExists = ['customer@example.com', 'test@example.com'].includes(
-        body.email_address,
+      const emailExists = ["customer@example.com", "test@example.com"].includes(
+        body.email_address
       );
 
       if (!emailExists) {
@@ -1728,23 +1740,23 @@ export default async function theOnlinePharmacy() {
       return reply.code(200).send({
         success: `Password reset email has been sent to ${body.email_address}`,
       });
-    },
+    }
   );
 
   // Contact supplier route
   fastify.post<{
-    Body: (typeof ContactSupplierRequestSchema)['static'];
+    Body: (typeof ContactSupplierRequestSchema)["static"];
     Querystring: { ticket_number: string };
   }>(
-    '/contact_supplier',
+    "/contact_supplier",
     {
       schema: {
-        summary: 'Contact supplier department',
+        summary: "Contact supplier department",
         description:
-          'Use this endpoint to contact the supplier department about product availability, delivery times, or other supplier-related issues.\nTypically used for:\n- Product availability questions\n- Delivery time questions\n- Supplier-specific product issues\n- Supply chain related questions\nNote: For product data issues, use contact_productmanagement. For order specific issues, use contact_warehouse.\n\nIf the user is asking about product availability, fetch the product details first to check if it is in stock using the search_product and product_details endpoints.',
+          "Use this endpoint to contact the supplier department about product availability, delivery times, or other supplier-related issues.\nTypically used for:\n- Product availability questions\n- Delivery time questions\n- Supplier-specific product issues\n- Supply chain related questions\nNote: For product data issues, use contact_productmanagement. For order specific issues, use contact_warehouse.\n\nIf the user is asking about product availability, fetch the product details first to check if it is in stock using the search_product and product_details endpoints.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: ContactSupplierRequestSchema,
@@ -1758,10 +1770,10 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the request is defined
-      if (!body.request || body.request.trim() === '') {
+      if (!body.request || body.request.trim() === "") {
         return reply.code(400).send({
           error:
-            'No request defined. Please provide a detailed description of the supplier-related issue or question.',
+            "No request defined. Please provide a detailed description of the supplier-related issue or question.",
         });
       }
 
@@ -1769,32 +1781,32 @@ export default async function theOnlinePharmacy() {
       if (body.request.length < 10) {
         return reply.code(400).send({
           error:
-            'Request is too short. Please provide more details about the supplier-related issue or question.',
+            "Request is too short. Please provide more details about the supplier-related issue or question.",
         });
       }
 
       // Dummy implementation - in a real system this would create a ticket for the supplier department
       return reply.code(200).send({
         success:
-          'Request sent to the supplier department. We will respond to the customer within 3 business days',
+          "Request sent to the supplier department. We will respond to the customer within 3 business days",
       });
-    },
+    }
   );
 
   // Contact PostNL route
   fastify.post<{
-    Body: (typeof ContactPostNLRequestSchema)['static'];
+    Body: (typeof ContactPostNLRequestSchema)["static"];
     Querystring: { ticket_number: string };
   }>(
-    '/contact_postnl',
+    "/contact_postnl",
     {
       schema: {
-        summary: 'Contact PostNL about a shipment',
+        summary: "Contact PostNL about a shipment",
         description:
-          'Use this endpoint to contact PostNL about issues with a specific shipment.\nThis will create a support ticket with PostNL to investigate the shipment status.\nTypically used when:\n- A package seems to be lost\n- Tracking information is not updated\n- Delivery status is unclear\n- Package is marked as delivered but not received',
+          "Use this endpoint to contact PostNL about issues with a specific shipment.\nThis will create a support ticket with PostNL to investigate the shipment status.\nTypically used when:\n- A package seems to be lost\n- Tracking information is not updated\n- Delivery status is unclear\n- Package is marked as delivered but not received",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: ContactPostNLRequestSchema,
@@ -1808,28 +1820,28 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the order exists
-      if (body.orders_id !== '1234' && body.orders_id !== '5678') {
+      if (body.orders_id !== "1234" && body.orders_id !== "5678") {
         return reply.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // Validate email address format
-      if (!body.email_address.includes('@')) {
+      if (!body.email_address.includes("@")) {
         return reply.code(400).send({
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         });
       }
 
       // Check if the email matches the order (in a real system, this would be verified in the database)
       const validEmailForOrder = [
-        'customer@example.com',
-        'test@example.com',
+        "customer@example.com",
+        "test@example.com",
       ].includes(body.email_address);
 
       if (!validEmailForOrder) {
         return reply.code(400).send({
-          error: 'Email address does not match the order',
+          error: "Email address does not match the order",
         });
       }
 
@@ -1838,32 +1850,32 @@ export default async function theOnlinePharmacy() {
 
       if (!hasTracking) {
         return reply.code(400).send({
-          error: 'No tracking information available for this order',
+          error: "No tracking information available for this order",
         });
       }
 
       // Dummy implementation - in a real system this would create a ticket with PostNL
       return reply.code(200).send({
         success:
-          'Request sent to PostNL. We will contact the customer once we have received a response from PostNL',
+          "Request sent to PostNL. We will contact the customer once we have received a response from PostNL",
       });
-    },
+    }
   );
 
   // Refund part of order route
   fastify.post<{
-    Body: (typeof RefundPartOfOrderRequestSchema)['static'];
+    Body: (typeof RefundPartOfOrderRequestSchema)["static"];
     Querystring: { ticket_number: string };
   }>(
-    '/refund_part_of_order',
+    "/refund_part_of_order",
     {
       schema: {
-        summary: 'Refund part of an order',
+        summary: "Refund part of an order",
         description:
-          'This endpoint initiates a partial refund for specific products within an order.\nA new refund order is created with zero costs and negative quantities.\nOnly products from the original order can be refunded, and quantities cannot be higher than the original order.\nThe order must be in a refundable state (e.g. shipped) to process the refund.',
+          "This endpoint initiates a partial refund for specific products within an order.\nA new refund order is created with zero costs and negative quantities.\nOnly products from the original order can be refunded, and quantities cannot be higher than the original order.\nThe order must be in a refundable state (e.g. shipped) to process the refund.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: RefundPartOfOrderRequestSchema,
@@ -1877,45 +1889,45 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the order exists
-      if (body.orders_id !== '1234' && body.orders_id !== '5678') {
+      if (body.orders_id !== "1234" && body.orders_id !== "5678") {
         return reply.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // If using email identification, check if the email is valid
-      if ('email_address' in body) {
-        if (!body.email_address.includes('@')) {
+      if ("email_address" in body) {
+        if (!body.email_address.includes("@")) {
           return reply.code(400).send({
-            error: 'Invalid email address format',
+            error: "Invalid email address format",
           });
         }
 
         // Check if the email matches the order (in a real system, this would be verified in the database)
         const validEmailForOrder = [
-          'customer@example.com',
-          'test@example.com',
+          "customer@example.com",
+          "test@example.com",
         ].includes(body.email_address);
 
         if (!validEmailForOrder) {
           return reply.code(400).send({
-            error: 'Email address does not match the order',
+            error: "Email address does not match the order",
           });
         }
       }
 
       // If using address identification, validate the address
-      if ('postcode' in body) {
+      if ("postcode" in body) {
         if (!body.postcode.match(/^[0-9]{4}\s?[A-Z]{2}$/i)) {
           return reply.code(400).send({
-            error: 'Invalid postal code format',
+            error: "Invalid postal code format",
           });
         }
 
         // Check if the address matches the order (in a real system, this would be verified in the database)
-        if (body.postcode !== '1234AB' || body.housenumber !== '123') {
+        if (body.postcode !== "1234AB" || body.housenumber !== "123") {
           return reply.code(400).send({
-            error: 'Address does not match the order',
+            error: "Address does not match the order",
           });
         }
       }
@@ -1923,22 +1935,22 @@ export default async function theOnlinePharmacy() {
       // Check if the products array is valid
       if (!body.products || body.products.length === 0) {
         return reply.code(400).send({
-          error: 'No products specified for refund',
+          error: "No products specified for refund",
         });
       }
 
       // In a real implementation, we would check if each product was part of the original order
       // and if the requested quantity is less than or equal to the original quantity
-      const originalOrderProducts = ['1001', '1002', '1003']; // Example original order products
+      const originalOrderProducts = ["1001", "1002", "1003"]; // Example original order products
       const originalOrderQuantities: Record<string, number> = {
-        '1001': 2,
-        '1002': 1,
-        '1003': 3,
+        "1001": 2,
+        "1002": 1,
+        "1003": 3,
       }; // Example original order quantities
       const productPrices: Record<string, number> = {
-        '1001': 12.99,
-        '1002': 9.99,
-        '1003': 15.5,
+        "1001": 12.99,
+        "1002": 9.99,
+        "1003": 15.5,
       }; // Example product prices
 
       let refundAmount = 0;
@@ -1963,7 +1975,7 @@ export default async function theOnlinePharmacy() {
 
       // In a real implementation, we would check if the order is in a state that can be refunded
       // For example, if the order is canceled, it cannot be refunded
-      const orderStatus = 'shipped'; // Example order status (in a real system, this would be retrieved from a database)
+      const orderStatus = "shipped"; // Example order status (in a real system, this would be retrieved from a database)
 
       // Dummy implementation - in a real system this would create a refund for the specified products
       return reply.code(200).send({
@@ -1972,23 +1984,23 @@ export default async function theOnlinePharmacy() {
         refund_amount: refundAmount,
         status: 21,
       });
-    },
+    }
   );
 
   // Pause order route
   fastify.post<{
-    Body: (typeof PauseOrderRequestSchema)['static'];
+    Body: (typeof PauseOrderRequestSchema)["static"];
     Querystring: { ticket_number: string };
   }>(
-    '/pause_order',
+    "/pause_order",
     {
       schema: {
-        summary: 'Pause order',
+        summary: "Pause order",
         description:
-          'This endpoint pauses an order that is still pending.\nUse this when a customer wants to make changes to a recent order.',
+          "This endpoint pauses an order that is still pending.\nUse this when a customer wants to make changes to a recent order.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
         }),
         body: PauseOrderRequestSchema,
@@ -2002,58 +2014,58 @@ export default async function theOnlinePharmacy() {
       const { body } = request;
 
       // Check if the order exists
-      if (body.orders_id !== '1234' && body.orders_id !== '5678') {
+      if (body.orders_id !== "1234" && body.orders_id !== "5678") {
         return reply.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // If using email identification, check if the email is valid
-      if ('email_address' in body) {
-        if (!body.email_address.includes('@')) {
+      if ("email_address" in body) {
+        if (!body.email_address.includes("@")) {
           return reply.code(400).send({
-            error: 'Invalid email address format',
+            error: "Invalid email address format",
           });
         }
 
         // Check if the email matches the order (in a real system, this would be verified in the database)
         const validEmailForOrder = [
-          'customer@example.com',
-          'test@example.com',
+          "customer@example.com",
+          "test@example.com",
         ].includes(body.email_address);
 
         if (!validEmailForOrder) {
           return reply.code(400).send({
-            error: 'Email address does not match the order',
+            error: "Email address does not match the order",
           });
         }
       }
 
       // If using address identification, validate the address
-      if ('postcode' in body) {
+      if ("postcode" in body) {
         if (!body.postcode.match(/^[0-9]{4}\s?[A-Z]{2}$/i)) {
           return reply.code(400).send({
-            error: 'Invalid postal code format',
+            error: "Invalid postal code format",
           });
         }
 
         // Check if the address matches the order (in a real system, this would be verified in the database)
-        if (body.postcode !== '1234AB' || body.housenumber !== '123') {
+        if (body.postcode !== "1234AB" || body.housenumber !== "123") {
           return reply.code(400).send({
-            error: 'Address does not match the order',
+            error: "Address does not match the order",
           });
         }
       }
 
       // In a real implementation, we would check if the order is in a state that can be paused
       // For example, if the order is already shipped, it cannot be paused
-      const orderStatus = 'processing'; // Example order status (in a real system, this would be retrieved from a database)
+      const orderStatus = "processing"; // Example order status (in a real system, this would be retrieved from a database)
 
       // Dummy implementation - in a real system this would pause the order
       return reply.code(200).send({
-        success: 'We have paused the order',
+        success: "We have paused the order",
       });
-    },
+    }
   );
 
   // Get order details by order ID and email route
@@ -2064,23 +2076,23 @@ export default async function theOnlinePharmacy() {
       email_address: string;
     };
   }>(
-    '/get_order_details_by_orderid_and_email',
+    "/get_order_details_by_orderid_and_email",
     {
       schema: {
-        summary: 'Get order details',
+        summary: "Get order details",
         description:
-          'Retrieves order information using an order number and verification via email address.\n\nIf the provided email address is similar but not exactly the same, the order(s) will still be returned with a notice about the email mismatch.',
+          "Retrieves order information using an order number and verification via email address.\n\nIf the provided email address is similar but not exactly the same, the order(s) will still be returned with a notice about the email mismatch.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
           orders_id: Type.String({
-            description: 'Order number',
+            description: "Order number",
           }),
           email_address: Type.String({
             description:
-              'Email address used when placing the order (exact match or similar)',
-            format: 'email',
+              "Email address used when placing the order (exact match or similar)",
+            format: "email",
           }),
         }),
         response: {
@@ -2093,32 +2105,32 @@ export default async function theOnlinePharmacy() {
       const { orders_id, email_address } = request.query;
 
       // Check if the order exists
-      if (orders_id !== '1234' && orders_id !== '5678') {
+      if (orders_id !== "1234" && orders_id !== "5678") {
         return reply.code(400).send({
-          error: 'Order not found',
+          error: "Order not found",
         });
       }
 
       // Validate email address format
-      if (!email_address.includes('@')) {
+      if (!email_address.includes("@")) {
         return reply.code(400).send({
-          error: 'Invalid email address format',
+          error: "Invalid email address format",
         });
       }
 
       // Example stored email for the order
-      const storedEmail = 'customr@example.com'; // Note the deliberate typo to simulate email mismatch
+      const storedEmail = "customr@example.com"; // Note the deliberate typo to simulate email mismatch
 
       // Check if the provided email is similar to the stored email
-      const emailDomain = email_address.split('@')[1];
-      const storedEmailDomain = storedEmail.split('@')[1];
+      const emailDomain = email_address.split("@")[1];
+      const storedEmailDomain = storedEmail.split("@")[1];
 
       const exactMatch = email_address === storedEmail;
       const similarDomain = emailDomain === storedEmailDomain;
 
       if (!exactMatch && !similarDomain) {
         return reply.code(400).send({
-          error: 'Email address does not match the order',
+          error: "Email address does not match the order",
         });
       }
 
@@ -2126,10 +2138,10 @@ export default async function theOnlinePharmacy() {
       const notices = !exactMatch
         ? [
             {
-              type: 'email_mismatch',
+              type: "email_mismatch",
               orders_id,
               message:
-                'The provided email address is similar but not exactly the same as the one used for the order',
+                "The provided email address is similar but not exactly the same as the one used for the order",
               details: {
                 provided: email_address,
                 actual: storedEmail,
@@ -2144,56 +2156,56 @@ export default async function theOnlinePharmacy() {
         orders: [
           {
             orders_id,
-            orders_status: 'shipped',
-            address_can_be_changed: 'false',
-            can_cancel: 'no',
+            orders_status: "shipped",
+            address_can_be_changed: "false",
+            can_cancel: "no",
             shipments: [
               {
-                tracktrace: '3STGVC123456789',
-                status: 'In transit',
+                tracktrace: "3STGVC123456789",
+                status: "In transit",
                 track_trace_link:
-                  'https://postnl.nl/tracktrace/3STGVC123456789',
+                  "https://postnl.nl/tracktrace/3STGVC123456789",
                 returned: null,
-                delivery_date: '2023-10-10',
+                delivery_date: "2023-10-10",
                 delivery_timeframe: {
-                  from: '14:00',
-                  to: '16:00',
+                  from: "14:00",
+                  to: "16:00",
                 },
                 status_history: [
                   {
-                    timestamp: '2023-10-09T15:30:00Z',
-                    description: 'Package received at sorting center',
+                    timestamp: "2023-10-09T15:30:00Z",
+                    description: "Package received at sorting center",
                   },
                   {
-                    timestamp: '2023-10-09T18:45:00Z',
-                    description: 'Package in transit to delivery center',
+                    timestamp: "2023-10-09T18:45:00Z",
+                    description: "Package in transit to delivery center",
                   },
                 ],
               },
             ],
-            date_purchased: '2023-10-08T10:15:00Z',
-            payment_method: 'iDEAL',
+            date_purchased: "2023-10-08T10:15:00Z",
+            payment_method: "iDEAL",
             total: 38.97,
             delivery_address: {
-              street: 'Example Street 123',
-              postcode: '1234AB',
-              city: 'Amsterdam',
+              street: "Example Street 123",
+              postcode: "1234AB",
+              city: "Amsterdam",
             },
             products: [
               {
-                product_id: '1001',
-                name: 'Vitamin C 1000mg',
-                artnr_up: 'UP12345',
-                eancode: '8712345678901',
+                product_id: "1001",
+                name: "Vitamin C 1000mg",
+                artnr_up: "UP12345",
+                eancode: "8712345678901",
                 quantity: 2,
                 quantity_delivered: 2,
                 products_price: 12.99,
               },
               {
-                product_id: '1002',
-                name: 'Vitamin D3 25mcg',
-                artnr_up: 'UP12346',
-                eancode: '8712345678902',
+                product_id: "1002",
+                name: "Vitamin D3 25mcg",
+                artnr_up: "UP12346",
+                eancode: "8712345678902",
                 quantity: 1,
                 quantity_delivered: 1,
                 products_price: 9.99,
@@ -2202,18 +2214,18 @@ export default async function theOnlinePharmacy() {
             connected_orders: [],
             emails: [
               {
-                recipient_name: 'Customer Name',
+                recipient_name: "Customer Name",
                 recipient_email: storedEmail,
-                subject: 'Your order confirmation #1234',
-                date: '2023-10-08T10:16:00Z',
-                status: 'delivered',
+                subject: "Your order confirmation #1234",
+                date: "2023-10-08T10:16:00Z",
+                status: "delivered",
               },
               {
-                recipient_name: 'Customer Name',
+                recipient_name: "Customer Name",
                 recipient_email: storedEmail,
-                subject: 'Your order has been shipped #1234',
-                date: '2023-10-09T09:30:00Z',
-                status: 'delivered',
+                subject: "Your order has been shipped #1234",
+                date: "2023-10-09T09:30:00Z",
+                status: "delivered",
               },
             ],
             contact_history: [],
@@ -2221,29 +2233,29 @@ export default async function theOnlinePharmacy() {
         ],
         notices,
       });
-    },
+    }
   );
 
   // Get order details by order ID and housenumber/postcode route
   fastify.get(
-    '/get_order_details_by_orderid_and_housenumber_postcode',
+    "/get_order_details_by_orderid_and_housenumber_postcode",
     {
       schema: {
-        summary: 'Get order details',
+        summary: "Get order details",
         description:
-          'Retrieves order information using an order number and verification via postal code and house number.\n\nIf the provided postal code and house number match the order details, the order(s) will be returned.',
+          "Retrieves order information using an order number and verification via postal code and house number.\n\nIf the provided postal code and house number match the order details, the order(s) will be returned.",
         querystring: Type.Object({
           ticket_number: Type.String({
-            description: 'Support ticket number associated with this request',
+            description: "Support ticket number associated with this request",
           }),
           orders_id: Type.String({
-            description: 'Order number',
+            description: "Order number",
           }),
           postcode: Type.String({
-            description: 'Postal code',
+            description: "Postal code",
           }),
           housenumber: Type.String({
-            description: 'House number',
+            description: "House number",
           }),
         }),
         response: {
@@ -2259,47 +2271,47 @@ export default async function theOnlinePharmacy() {
         orders: [
           {
             orders_id: query.orders_id,
-            orders_status: 'Processed',
-            address_can_be_changed: 'false',
-            can_cancel: 'no' as const,
+            orders_status: "Processed",
+            address_can_be_changed: "false",
+            can_cancel: "no" as const,
             shipments: [
               {
-                tracktrace: '3STTNL1234567890',
-                status: 'Delivered',
+                tracktrace: "3STTNL1234567890",
+                status: "Delivered",
                 track_trace_link:
-                  'https://postnl.nl/track-and-trace/3STTNL1234567890',
+                  "https://postnl.nl/track-and-trace/3STTNL1234567890",
                 returned: null,
-                delivery_date: '2023-04-15',
+                delivery_date: "2023-04-15",
                 delivery_timeframe: {
-                  from: '09:00',
-                  to: '12:00',
+                  from: "09:00",
+                  to: "12:00",
                 },
                 status_history: [
                   {
-                    timestamp: '2023-04-15T11:30:00Z',
-                    description: 'Package delivered',
+                    timestamp: "2023-04-15T11:30:00Z",
+                    description: "Package delivered",
                   },
                   {
-                    timestamp: '2023-04-15T08:15:00Z',
-                    description: 'Out for delivery',
+                    timestamp: "2023-04-15T08:15:00Z",
+                    description: "Out for delivery",
                   },
                 ],
               },
             ],
-            date_purchased: '2023-04-13T14:25:00Z',
-            payment_method: 'iDEAL',
+            date_purchased: "2023-04-13T14:25:00Z",
+            payment_method: "iDEAL",
             total: 45.99,
             delivery_address: {
-              street: 'Example Street 42',
+              street: "Example Street 42",
               postcode: query.postcode,
-              city: 'Amsterdam',
+              city: "Amsterdam",
             },
             products: [
               {
-                product_id: '1001',
-                name: 'Vitamin C 1000mg',
-                artnr_up: 'UP12345',
-                eancode: '8712345678901',
+                product_id: "1001",
+                name: "Vitamin C 1000mg",
+                artnr_up: "UP12345",
+                eancode: "8712345678901",
                 quantity: 2,
                 quantity_delivered: 2,
                 products_price: 22.99,
@@ -2308,18 +2320,18 @@ export default async function theOnlinePharmacy() {
             connected_orders: [],
             emails: [
               {
-                recipient_name: 'John Doe',
-                recipient_email: 'customer@example.com',
-                subject: 'Your order confirmation',
-                date: '2023-04-13T14:26:00Z',
-                status: 'delivered',
+                recipient_name: "John Doe",
+                recipient_email: "customer@example.com",
+                subject: "Your order confirmation",
+                date: "2023-04-13T14:26:00Z",
+                status: "delivered",
               },
             ],
             contact_history: [],
           },
         ],
       };
-    },
+    }
   );
 
   // Get limited order information via email address route
@@ -2328,18 +2340,18 @@ export default async function theOnlinePharmacy() {
       ticket_number: string;
       email_address: string;
     };
-  }>('/get_orders_for_mail_address', {
+  }>("/get_orders_for_mail_address", {
     schema: {
-      summary: 'Get limited order information via email address',
+      summary: "Get limited order information via email address",
       description:
-        'Retrieves a list of orders with limited information (only date and status) for a given email address.\nThis endpoint is designed for preliminary order status checking without revealing sensitive order details. Useful when a user only provides an email address and asks about order status.',
+        "Retrieves a list of orders with limited information (only date and status) for a given email address.\nThis endpoint is designed for preliminary order status checking without revealing sensitive order details. Useful when a user only provides an email address and asks about order status.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
         email_address: Type.String({
-          description: 'Email address to search orders for',
-          format: 'email',
+          description: "Email address to search orders for",
+          format: "email",
         }),
       }),
       response: {
@@ -2352,12 +2364,12 @@ export default async function theOnlinePharmacy() {
       return {
         orders: [
           {
-            date_purchased: '2023-04-13T14:25:00Z',
-            orders_status: 'Processed',
+            date_purchased: "2023-04-13T14:25:00Z",
+            orders_status: "Processed",
           },
           {
-            date_purchased: '2023-03-05T09:12:00Z',
-            orders_status: 'Delivered',
+            date_purchased: "2023-03-05T09:12:00Z",
+            orders_status: "Delivered",
           },
         ],
       };
@@ -2372,14 +2384,14 @@ export default async function theOnlinePharmacy() {
     Querystring: {
       ticket_number: string;
     };
-  }>('/unsubscribe_newsletter', {
+  }>("/unsubscribe_newsletter", {
     schema: {
-      summary: 'Unsubscribe from newsletter',
+      summary: "Unsubscribe from newsletter",
       description:
-        'Use this endpoint to unsubscribe an email address from the newsletter.',
+        "Use this endpoint to unsubscribe an email address from the newsletter.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
       }),
       body: UnsubscribeNewsletterRequestSchema,
@@ -2390,14 +2402,14 @@ export default async function theOnlinePharmacy() {
     },
     handler: async ({ body }) => {
       // Dummy implementation - in a real system this would unsubscribe the email from the newsletter
-      if (!body.email_address || !body.email_address.includes('@')) {
+      if (!body.email_address || !body.email_address.includes("@")) {
         return {
-          error: 'Invalid email address',
+          error: "Invalid email address",
         };
       }
 
       return {
-        success: 'Successfully unsubscribed from newsletter',
+        success: "Successfully unsubscribed from newsletter",
       };
     },
   });
@@ -2410,14 +2422,14 @@ export default async function theOnlinePharmacy() {
     Querystring: {
       ticket_number: string;
     };
-  }>('/unsubscribe_product_reviews', {
+  }>("/unsubscribe_product_reviews", {
     schema: {
-      summary: 'Unsubscribe from product review invitations',
+      summary: "Unsubscribe from product review invitations",
       description:
-        'Use this endpoint to unsubscribe an email address from product review invitations.',
+        "Use this endpoint to unsubscribe an email address from product review invitations.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
       }),
       body: UnsubscribeProductReviewsRequestSchema,
@@ -2428,14 +2440,14 @@ export default async function theOnlinePharmacy() {
     },
     handler: async ({ body }) => {
       // Dummy implementation - in a real system this would unsubscribe the email from product reviews
-      if (!body.email_address || !body.email_address.includes('@')) {
+      if (!body.email_address || !body.email_address.includes("@")) {
         return {
-          error: 'Invalid email address',
+          error: "Invalid email address",
         };
       }
 
       return {
-        success: 'Successfully unsubscribed from product reviews',
+        success: "Successfully unsubscribed from product reviews",
       };
     },
   });
@@ -2446,18 +2458,18 @@ export default async function theOnlinePharmacy() {
       ticket_number: string;
       email_address: string;
     };
-  }>('/check_account', {
+  }>("/check_account", {
     schema: {
-      summary: 'Check if a customer account exists',
+      summary: "Check if a customer account exists",
       description:
-        'Use this endpoint to check if a customer account exists for a given email address.',
+        "Use this endpoint to check if a customer account exists for a given email address.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
         email_address: Type.String({
-          description: 'Email address to check if a customer account exists',
-          format: 'email',
+          description: "Email address to check if a customer account exists",
+          format: "email",
         }),
       }),
       response: {
@@ -2467,21 +2479,21 @@ export default async function theOnlinePharmacy() {
     },
     handler: async ({ query }) => {
       // Dummy implementation - in a real system this would check if an account exists
-      const validEmails = ['customer@example.com', 'john.doe@example.com'];
+      const validEmails = ["customer@example.com", "john.doe@example.com"];
 
-      if (!query.email_address || !query.email_address.includes('@')) {
+      if (!query.email_address || !query.email_address.includes("@")) {
         return {
-          error: 'Invalid email address',
+          error: "Invalid email address",
         };
       }
 
       if (validEmails.includes(query.email_address)) {
         return {
-          success: 'Customer account exists for the given email address',
+          success: "Customer account exists for the given email address",
         };
       } else {
         return {
-          error: 'No customer account found for the given email address',
+          error: "No customer account found for the given email address",
         };
       }
     },
@@ -2493,20 +2505,20 @@ export default async function theOnlinePharmacy() {
       ticket_number: string;
       email_address?: string;
     };
-  }>('/get_my_orders', {
+  }>("/get_my_orders", {
     schema: {
-      summary: 'Get all orders for the user',
+      summary: "Get all orders for the user",
       description:
-        'Retrieves all orders for the user. Authentication can be via different channels:\n\n1. WhatsApp - Authenticated via the WhatsApp number\n2. Chat - Authenticated when logged in\n3. Email - Authenticated via the email_address parameter\n\nThe response contains detailed information about all orders of the user, including status, shipping details, and contact history.',
+        "Retrieves all orders for the user. Authentication can be via different channels:\n\n1. WhatsApp - Authenticated via the WhatsApp number\n2. Chat - Authenticated when logged in\n3. Email - Authenticated via the email_address parameter\n\nThe response contains detailed information about all orders of the user, including status, shipping details, and contact history.",
       querystring: Type.Object({
         ticket_number: Type.String({
-          description: 'Support ticket number associated with this request',
+          description: "Support ticket number associated with this request",
         }),
         email_address: Type.Optional(
           Type.String({
-            description: 'Email address for email authentication context',
-            format: 'email',
-          }),
+            description: "Email address for email authentication context",
+            format: "email",
+          })
         ),
       }),
       response: {
@@ -2514,23 +2526,21 @@ export default async function theOnlinePharmacy() {
         400: GetMyOrdersErrorResponseSchema,
       },
     },
-    handler: async (request: {
-      query: { ticket_number: string; email_address?: string };
-    }) => {
+    handler: async (request) => {
       const { query } = request;
 
       // Dummy implementation - determine authentication context
-      let context: 'whatsapp' | 'chat_authenticated' | 'email' =
-        'chat_authenticated';
+      let context: "whatsapp" | "chat_authenticated" | "email" =
+        "chat_authenticated";
 
       if (query.email_address) {
-        context = 'email';
+        context = "email";
       }
 
       // Check if we have a valid authentication context (for demo purposes, assume we do)
       if (!context) {
         return {
-          error: 'No valid authentication context found',
+          error: "No valid authentication context found",
         };
       }
 
@@ -2538,47 +2548,47 @@ export default async function theOnlinePharmacy() {
       return {
         orders: [
           {
-            orders_id: '123456',
-            orders_status: 'Delivered',
+            orders_id: "123456",
+            orders_status: "Delivered",
             address_can_be_changed: false,
-            can_cancel: 'no',
+            can_cancel: "no",
             shipments: [
               {
-                status: 'Delivered',
+                status: "Delivered",
                 returned: null,
-                delivery_date: '2023-04-15',
+                delivery_date: "2023-04-15",
                 delivery_timeframe: {
-                  from: '09:00',
-                  to: '12:00',
+                  from: "09:00",
+                  to: "12:00",
                 },
                 track_trace_link:
-                  'https://postnl.nl/track-and-trace/3STTNL1234567890',
+                  "https://postnl.nl/track-and-trace/3STTNL1234567890",
                 status_history: [
                   {
-                    timestamp: '2023-04-15T11:30:00Z',
-                    description: 'Package delivered',
+                    timestamp: "2023-04-15T11:30:00Z",
+                    description: "Package delivered",
                   },
                   {
-                    timestamp: '2023-04-15T08:15:00Z',
-                    description: 'Out for delivery',
+                    timestamp: "2023-04-15T08:15:00Z",
+                    description: "Out for delivery",
                   },
                 ],
               },
             ],
-            date_purchased: '2023-04-13T14:25:00Z',
-            payment_method: 'iDEAL',
+            date_purchased: "2023-04-13T14:25:00Z",
+            payment_method: "iDEAL",
             total: 45.99,
             delivery_address: {
-              street: 'Example Street 42',
-              postcode: '1234 AB',
-              city: 'Amsterdam',
+              street: "Example Street 42",
+              postcode: "1234 AB",
+              city: "Amsterdam",
             },
             products: [
               {
-                product_id: '1001',
-                name: 'Vitamin C 1000mg',
-                artnr_up: 'UP12345',
-                eancode: '8712345678901',
+                product_id: "1001",
+                name: "Vitamin C 1000mg",
+                artnr_up: "UP12345",
+                eancode: "8712345678901",
                 quantity: 2,
                 quantity_delivered: 2,
                 products_price: 22.99,
@@ -2587,43 +2597,43 @@ export default async function theOnlinePharmacy() {
             connected_orders: [],
             emails: [
               {
-                recipient_name: 'John Doe',
-                recipient_email: 'john.doe@example.com',
-                subject: 'Your order confirmation',
-                date: '2023-04-13T14:26:00Z',
-                status: 'delivered',
+                recipient_name: "John Doe",
+                recipient_email: "john.doe@example.com",
+                subject: "Your order confirmation",
+                date: "2023-04-13T14:26:00Z",
+                status: "delivered",
               },
             ],
             contact_history: [
               {
-                type: 'email',
-                date: '2023-04-14',
+                type: "email",
+                date: "2023-04-14",
                 timestamp: 1681484400,
-                user: 'Customer Service',
-                summary: 'Customer asked about delivery time',
+                user: "Customer Service",
+                summary: "Customer asked about delivery time",
               },
             ],
           },
           {
-            orders_id: '123457',
-            orders_status: 'Processing',
+            orders_id: "123457",
+            orders_status: "Processing",
             address_can_be_changed: true,
-            can_cancel: 'yes',
+            can_cancel: "yes",
             shipments: [],
-            date_purchased: '2023-05-20T10:15:00Z',
-            payment_method: 'Credit Card',
+            date_purchased: "2023-05-20T10:15:00Z",
+            payment_method: "Credit Card",
             total: 32.5,
             delivery_address: {
-              street: 'Example Street 42',
-              postcode: '1234 AB',
-              city: 'Amsterdam',
+              street: "Example Street 42",
+              postcode: "1234 AB",
+              city: "Amsterdam",
             },
             products: [
               {
-                product_id: '2001',
-                name: 'Vitamin D3 5000IU',
-                artnr_up: 'UP23456',
-                eancode: '8712345678902',
+                product_id: "2001",
+                name: "Vitamin D3 5000IU",
+                artnr_up: "UP23456",
+                eancode: "8712345678902",
                 quantity: 1,
                 quantity_delivered: 0,
                 products_price: 32.5,
@@ -2632,11 +2642,11 @@ export default async function theOnlinePharmacy() {
             connected_orders: [],
             emails: [
               {
-                recipient_name: 'John Doe',
-                recipient_email: 'john.doe@example.com',
-                subject: 'Your order confirmation',
-                date: '2023-05-20T10:16:00Z',
-                status: 'delivered',
+                recipient_name: "John Doe",
+                recipient_email: "john.doe@example.com",
+                subject: "Your order confirmation",
+                date: "2023-05-20T10:16:00Z",
+                status: "delivered",
               },
             ],
             contact_history: [],
@@ -2648,12 +2658,12 @@ export default async function theOnlinePharmacy() {
   });
 
   // Listen on port
-  fastify.listen({ port, host: '0.0.0.0' }, (err: Error | null) => {
+  fastify.listen({ port, host: "0.0.0.0" }, (err: Error | null) => {
     if (err) {
       console.error(err);
       process.exit(1);
     }
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Pharmacy Eval Server docs at http://localhost:${port}/docs`);
   });
 
   return fastify;
