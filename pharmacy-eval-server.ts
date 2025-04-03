@@ -1,3 +1,4 @@
+import FastifyBearerAuthPlugin from "@fastify/bearer-auth";
 import FastifySwaggerPlugin from "@fastify/swagger";
 import FastifySwaggerUIPlugin from "@fastify/swagger-ui";
 import { Type, type TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
@@ -85,12 +86,12 @@ import {
   UnsubscribeProductReviewsResponseSchema,
 } from "./pharmacy-eval-schemas";
 
-export default async function theOnlinePharmacy() {
-  const fastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
+const rootFastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
 
+export default async function theOnlinePharmacy() {
   const port = 5551;
 
-  await fastify.register(FastifySwaggerPlugin, {
+  await rootFastify.register(FastifySwaggerPlugin, {
     exposeHeadRoutes: false,
     openapi: {
       openapi: "3.1.0",
@@ -100,6 +101,15 @@ export default async function theOnlinePharmacy() {
           "API for TheOnlinePharmacy, providing access to products, categories, brands, orders, and customers",
         version: "0.1.0",
       },
+      components: {
+        securitySchemes: {
+          Bearer: {
+            type: "http",
+            scheme: "bearer",
+          },
+        },
+      },
+      security: [{ Bearer: [] }],
       servers: [
         {
           url: `http://localhost:${port}`,
@@ -109,10 +119,34 @@ export default async function theOnlinePharmacy() {
     },
   });
 
-  await fastify.register(FastifySwaggerUIPlugin, {
+  await rootFastify.register(FastifySwaggerUIPlugin, {
     routePrefix: "/docs",
   });
 
+  rootFastify.register(async (fastify) => {
+    fastify.register(FastifyBearerAuthPlugin, {
+      keys: new Set(["authorizatiion"]),
+      auth(token) {
+        return token === "xx";
+      },
+    });
+
+    privateRoutes(fastify);
+  });
+
+  // Listen on port
+  rootFastify.listen({ port }, (err) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`Pharmacy Eval Server docs at http://localhost:${port}/docs`);
+  });
+
+  return rootFastify;
+}
+
+function privateRoutes(fastify: typeof rootFastify) {
   // Products routes
   fastify.get("/products", {
     schema: {
@@ -2656,15 +2690,4 @@ export default async function theOnlinePharmacy() {
       };
     },
   });
-
-  // Listen on port
-  fastify.listen({ port, host: "0.0.0.0" }, (err: Error | null) => {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
-    console.log(`Pharmacy Eval Server docs at http://localhost:${port}/docs`);
-  });
-
-  return fastify;
 }
