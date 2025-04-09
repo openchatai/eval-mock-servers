@@ -1,3 +1,3 @@
-import pharmacyEvalServer from './pharmacy-eval-server';
+import pharmacyEvalServer from "./pharmacy/pharmacy-eval-server";
 
 pharmacyEvalServer();
