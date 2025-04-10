@@ -8,7 +8,7 @@ import { buildRetailDB, OrdersSchema } from "./data/db";
 
 const rootFastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
 
-export default async function theOnlinePharmacy() {
+export default async function tauBenchRetailServer() {
   const port = 5552;
 
   await rootFastify.register(FastifySwaggerPlugin, {
