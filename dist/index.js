@@ -132038,8 +132038,9 @@ async function buildRetailDB() {
 
 // tau-bench/retail/tau-bench-retail.ts
 var rootFastify = import_fastify.default().withTypeProvider();
-async function tauBenchRetailServer() {
-  const port = 5552;
+async function tauBenchRetailServer({
+  port = 5552
+}) {
   await rootFastify.register(import_swagger.default, {
     exposeHeadRoutes: false,
     openapi: {
