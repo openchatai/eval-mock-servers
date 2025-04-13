@@ -73,7 +73,7 @@ const dbsByTenantId = new Map<
   Awaited<ReturnType<typeof buildRetailDB>>
 >();
 
-async function getDB(tenantId: string) {
+export async function getDB(tenantId: string) {
   if (!dbsByTenantId.has(tenantId)) {
     dbsByTenantId.set(tenantId, await buildRetailDB());
   }
