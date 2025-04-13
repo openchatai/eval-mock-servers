@@ -132085,6 +132085,7 @@ async function tauBenchRetailServer() {
     }
     console.log(`Tau-Bench Retail Server docs at http://localhost:${port}/docs`);
   });
+  await rootFastify.ready();
   return rootFastify;
 }
 var dbsByTenantId = new Map;

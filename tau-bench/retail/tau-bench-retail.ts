@@ -65,6 +65,8 @@ export default async function tauBenchRetailServer() {
     );
   });
 
+  await rootFastify.ready();
+
   return rootFastify;
 }
 
