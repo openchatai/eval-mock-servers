@@ -2393,7 +2393,7 @@ function privateRoutes(fastify: typeof rootFastify) {
         400: GetOrdersForEmailAddressErrorResponseSchema,
       },
     },
-    handler: async ({ query }) => {
+    handler: async () => {
       // Dummy implementation - in a real system this would fetch limited order data for the email
       return {
         orders: [

@@ -3,6 +3,9 @@
   "module": "main.ts",
   "types": "dist/index.d.ts",
   "type": "module",
+  "scripts": {
+    "build": "bun build --target=node ./index.ts --outfile=dist/index.js && tsc --emitDeclarationOnly --outDir dist"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js",
