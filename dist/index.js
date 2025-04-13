@@ -125937,8 +125937,9 @@ var require_products = __commonJS((exports, module) => {
 // tau-bench/retail/tau-bench-retail.ts
 var exports_tau_bench_retail = {};
 __export(exports_tau_bench_retail, {
-  getDB: () => getDB,
-  default: () => tauBenchRetailServer
+  serve: () => serve,
+  policy: () => policy,
+  getDB: () => getDB
 });
 var import_bearer_auth = __toESM(require_bearer_auth(), 1);
 var import_swagger = __toESM(require_swagger2(), 1);
@@ -128642,6 +128643,7 @@ var Type = exports_type3;
 
 // tau-bench/retail/tau-bench-retail.ts
 var import_fastify = __toESM(require_fastify(), 1);
+import * as fs from "fs/promises";
 
 // node_modules/@sinclair/typebox/build/esm/errors/function.mjs
 function DefaultErrorFunction(error) {
@@ -132037,10 +132039,12 @@ async function buildRetailDB() {
 }
 
 // tau-bench/retail/tau-bench-retail.ts
+var __dirname = "/Users/tabaza/Desktop/opencx/eval-mock-servers/tau-bench/retail";
 var rootFastify = import_fastify.default().withTypeProvider();
-async function tauBenchRetailServer({
-  port = 5552
-}) {
+async function policy() {
+  return fs.readFile(`${__dirname}/data/policy.md`, "utf-8");
+}
+async function serve({ port = 5552 }) {
   await rootFastify.register(import_swagger.default, {
     exposeHeadRoutes: false,
     openapi: {

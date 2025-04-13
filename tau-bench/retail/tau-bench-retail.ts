@@ -4,15 +4,16 @@ import FastifySwaggerUIPlugin from "@fastify/swagger-ui";
 import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import { Type } from "@sinclair/typebox";
 import Fastify, { type FastifyRequest } from "fastify";
+import * as fs from "fs/promises";
 import { buildRetailDB, OrdersSchema } from "./data/db";
 
 const rootFastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
 
-export default async function tauBenchRetailServer({
-  port = 5552,
-}: {
-  port?: number;
-}) {
+export async function policy() {
+  return fs.readFile(`${__dirname}/data/policy.md`, "utf-8");
+}
+
+export async function serve({ port = 5552 }: { port?: number }) {
   await rootFastify.register(FastifySwaggerPlugin, {
     exposeHeadRoutes: false,
     openapi: {
