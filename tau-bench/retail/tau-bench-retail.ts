@@ -4,14 +4,21 @@ import FastifySwaggerUIPlugin from "@fastify/swagger-ui";
 import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import { Type } from "@sinclair/typebox";
 import Fastify, { type FastifyRequest } from "fastify";
-import * as fs from "fs/promises";
 import { buildRetailDB, OrdersSchema } from "./data/db";
 
-const rootFastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
-
 export async function policy() {
-  return fs.readFile(`${__dirname}/data/policy.md`, "utf-8");
+  return fetch(
+    "https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/wiki.md"
+  ).then((res) => res.text());
 }
+
+export async function scenarios() {
+  return await fetch(
+    "https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/historical_trajectories/gpt-4o-retail.json"
+  ).then((res) => res.json());
+}
+
+const rootFastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
 
 export async function serve({ port = 5552 }: { port?: number }) {
   await rootFastify.register(FastifySwaggerPlugin, {
