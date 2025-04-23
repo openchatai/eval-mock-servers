@@ -37,9 +37,14 @@ export async function serve({ port = 5552 }: { port?: number }) {
             type: "http",
             scheme: "bearer",
           },
+          Tenant: {
+            type: "apiKey",
+            in: "header",
+            name: "x-tenant-id",
+          },
         },
       },
-      security: [{ Bearer: [] }],
+      security: [{ Bearer: [], Tenant: [] }],
       servers: [
         {
           url: `http://localhost:${port}`,

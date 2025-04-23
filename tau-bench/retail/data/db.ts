@@ -101,18 +101,22 @@ export const DBSchema = Type.Object({
 });
 
 export async function buildRetailDB(): Promise<StaticDecode<typeof DBSchema>> {
-  const [{ default: users }, { default: orders }, { default: products }] =
-    await Promise.all([
-      fetch(
-        "https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/data/users.json"
-      ).then((res) => res.json()),
-      fetch(
-        "https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/data/orders.json"
-      ).then((res) => res.json()),
-      fetch(
-        "https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/data/products.json"
-      ).then((res) => res.json()),
-    ]);
+  const [users, orders, products] = await Promise.all([
+    fetch(
+      "https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/data/users.json"
+    ).then((res) => res.json()),
+    fetch(
+      "https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/data/orders.json"
+    ).then((res) => res.json()),
+    fetch(
+      "https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/data/products.json"
+    ).then((res) => res.json()),
+  ]);
 
-  return Value.Decode(DBSchema, { users, orders, products });
+  try {
+    return Value.Decode(DBSchema, { users, orders, products });
+  } catch (e) {
+    console.error("Failed to parse benchmark data", e);
+    throw e;
+  }
 }
