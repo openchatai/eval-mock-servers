@@ -1,6 +1,7 @@
 import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import { scenarios } from "./data/trajectories";
 export declare function policy(): Promise<string>;
-export declare function scenarios(): Promise<any>;
+export { scenarios };
 export declare function serve({ port }: {
     port?: number;
 }): Promise<import("fastify").FastifyInstance<import("http").Server<typeof import("http").IncomingMessage, typeof import("http").ServerResponse>, import("http").IncomingMessage, import("http").ServerResponse<import("http").IncomingMessage>, import("fastify").FastifyBaseLogger, TypeBoxTypeProvider>>;

@@ -55565,20 +55565,49 @@ var DBSchema = Type.Object({
   products: Type.Record(Type.String(), ProductSchema)
 });
 async function buildRetailDB() {
-  const [{ default: users }, { default: orders }, { default: products }] = await Promise.all([
+  const [users, orders, products] = await Promise.all([
     fetch("https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/data/users.json").then((res) => res.json()),
     fetch("https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/data/orders.json").then((res) => res.json()),
     fetch("https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/data/products.json").then((res) => res.json())
   ]);
-  return exports_value2.Decode(DBSchema, { users, orders, products });
+  try {
+    return exports_value2.Decode(DBSchema, { users, orders, products });
+  } catch (e) {
+    console.error("Failed to parse benchmark data", e);
+    throw e;
+  }
+}
+
+// tau-bench/retail/data/trajectories.ts
+var TrajectorySchema = Type.Object({
+  task_id: Type.Integer(),
+  info: Type.Object({
+    task: Type.Object({
+      user_id: Type.String(),
+      instruction: Type.String(),
+      actions: Type.Array(Type.Object({
+        name: Type.String(),
+        kwargs: Type.Record(Type.String(), Type.Unknown())
+      }))
+    })
+  })
+});
+async function scenarios(params) {
+  const json = await fetch("https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/historical_trajectories/gpt-4o-retail.json").then((res) => res.json());
+  let items = [];
+  if (params.indexes && params.indexes.length > 0) {
+    for (const index of params.indexes) {
+      items.push(json[index]);
+    }
+  } else {
+    items = json;
+  }
+  return exports_value2.Decode(Type.Array(TrajectorySchema), items);
 }
 
 // tau-bench/retail/tau-bench-retail.ts
 async function policy() {
   return fetch("https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/tau_bench/envs/retail/wiki.md").then((res) => res.text());
-}
-async function scenarios() {
-  return await fetch("https://raw.githubusercontent.com/sierra-research/tau-bench/14bf0ef52e595922d597a38f32d3e8c0dce3a8f8/historical_trajectories/gpt-4o-retail.json").then((res) => res.json());
 }
 var rootFastify = import_fastify.default().withTypeProvider();
 async function serve({ port = 5552 }) {
@@ -55596,10 +55625,15 @@ async function serve({ port = 5552 }) {
           Bearer: {
             type: "http",
             scheme: "bearer"
+          },
+          Tenant: {
+            type: "apiKey",
+            in: "header",
+            name: "x-tenant-id"
           }
         }
       },
-      security: [{ Bearer: [] }],
+      security: [{ Bearer: [], Tenant: [] }],
       servers: [
         {
           url: `http://localhost:${port}`,
