@@ -55681,6 +55681,7 @@ function getTenantId(request) {
 function privateRoutes(fastify) {
   fastify.post("/cancel-pending-order", {
     schema: {
+      operationId: "cancel_pending_order",
       description: "Cancel a pending order. If the order is already processed or delivered, it cannot be cancelled. The agent needs to explain the cancellation detail and ask for explicit user confirmation (yes/no) to proceed. If the user confirms, the order status will be changed to 'cancelled' and the payment will be refunded. The refund will be added to the user's gift card balance immediately if the payment was made using a gift card, otherwise the refund would take 5-7 business days to process. The function returns the order details after the cancellation.",
       body: Type.Object({
         order_id: Type.String({
@@ -55733,6 +55734,7 @@ function privateRoutes(fastify) {
   });
   fastify.post("/exchange-delivered-order-items", {
     schema: {
+      operationId: "exchange_delivered_order_items",
       description: "Exchange items in a delivered order to new items of the same product type. For a delivered order, return or exchange can be only done once by the agent. The agent needs to explain the exchange detail and ask for explicit user confirmation (yes/no) to proceed.",
       body: Type.Object({
         order_id: Type.String({
@@ -55808,6 +55810,7 @@ function privateRoutes(fastify) {
   });
   fastify.get("/find-user-id-by-email", {
     schema: {
+      operationId: "find_user_id_by_email",
       description: "Find user id by email. If the user is not found, the function will return an error message.",
       querystring: Type.Object({
         email: Type.String({
@@ -55835,6 +55838,7 @@ function privateRoutes(fastify) {
   });
   fastify.get("/find-user-id-by-name-zip", {
     schema: {
+      operationId: "find_user_id_by_name_zip",
       description: "Find user id by first name, last name, and zip code. If the user is not found, the function will return an error message. By default, find user id by email, and only call this function if the user is not found by email or cannot remember email.",
       querystring: Type.Object({
         first_name: Type.String({
@@ -55868,6 +55872,7 @@ function privateRoutes(fastify) {
   });
   fastify.get("/get-order-details", {
     schema: {
+      operationId: "get_order_details",
       description: "Get the status and details of an order.",
       querystring: Type.Object({
         order_id: Type.String({
@@ -55893,6 +55898,7 @@ function privateRoutes(fastify) {
   });
   fastify.get("/get-product-details", {
     schema: {
+      operationId: "get_product_details",
       description: "Get the inventory details of a product.",
       querystring: Type.Object({
         product_id: Type.String({
@@ -55927,6 +55933,7 @@ function privateRoutes(fastify) {
   });
   fastify.get("/get-user-details", {
     schema: {
+      operationId: "get_user_details",
       description: "Get the details of a user, including their orders.",
       querystring: Type.Object({
         user_id: Type.String({
@@ -55984,6 +55991,7 @@ function privateRoutes(fastify) {
   });
   fastify.get("/list-all-product-types", {
     schema: {
+      operationId: "list_all_product_types",
       description: "List the name and product id of all product types. Each product type has a variety of different items with unique item ids and options. There are only 50 product types in the store.",
       response: {
         200: Type.Record(Type.String(), Type.String())
@@ -56001,6 +56009,7 @@ function privateRoutes(fastify) {
   });
   fastify.post("/modify-pending-order-address", {
     schema: {
+      operationId: "modify_pending_order_address",
       description: "Modify the shipping address of a pending order. The agent needs to explain the modification detail and ask for explicit user confirmation (yes/no) to proceed.",
       body: Type.Object({
         order_id: Type.String({
@@ -56058,6 +56067,7 @@ function privateRoutes(fastify) {
   });
   fastify.post("/modify-pending-order-items", {
     schema: {
+      operationId: "modify_pending_order_items",
       description: "Modify items in a pending order to new items of the same product type. For a pending order, this function can only be called once. The agent needs to explain the exchange detail and ask for explicit user confirmation (yes/no) to proceed.",
       body: Type.Object({
         order_id: Type.String({
@@ -56151,6 +56161,7 @@ function privateRoutes(fastify) {
   });
   fastify.post("/modify-pending-order-payment", {
     schema: {
+      operationId: "modify_pending_order_payment",
       description: "Modify the payment method of a pending order. The agent needs to explain the modification detail and ask for explicit user confirmation (yes/no) to proceed.",
       body: Type.Object({
         order_id: Type.String({
@@ -56224,6 +56235,7 @@ function privateRoutes(fastify) {
   });
   fastify.post("/modify-user-address", {
     schema: {
+      operationId: "modify_user_address",
       description: "Modify the default address of a user. The agent needs to explain the modification detail and ask for explicit user confirmation (yes/no) to proceed.",
       body: Type.Object({
         user_id: Type.String({
@@ -56307,6 +56319,7 @@ function privateRoutes(fastify) {
   });
   fastify.post("/return-delivered-order-items", {
     schema: {
+      operationId: "return_delivered_order_items",
       description: "Return some items of a delivered order. The order status will be changed to 'return requested'. The agent needs to explain the return detail and ask for explicit user confirmation (yes/no) to proceed. The user will receive follow-up email for how and where to return the item.",
       body: Type.Object({
         order_id: Type.String({
